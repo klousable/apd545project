@@ -34,16 +34,6 @@
                                         <RowConstraints maxHeight="82.0" minHeight="10.0" prefHeight="41.0" vgrow="SOMETIMES" />
                                     </rowConstraints>
                                     <children>
-                                        <ButtonBar prefHeight="49.0" prefWidth="402.0" GridPane.rowIndex="2">
-                                            <buttons>
-                                                <Button fx:id="addPartButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="240.0" text="Add" />
-                                                <Button fx:id="modifyPartButton" mnemonicParsing="false" text="Modify" />
-                                                <Button fx:id="deletePartButton" mnemonicParsing="false" prefHeight="25.0" text="Delete" />
-                                            </buttons>
-                                            <GridPane.margin>
-                                                <Insets left="5.0" right="5.0" />
-                                            </GridPane.margin>
-                                        </ButtonBar>
                                         <TableView fx:id="partTableView" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
                                             <columns>
                                                 <TableColumn fx:id="partIdColumn" prefWidth="71.0" text="ID" />
@@ -67,6 +57,16 @@
                                                     </HBox.margin></TextField>
                                             </children>
                                         </HBox>
+                              <ButtonBar prefHeight="45.0" prefWidth="401.0" GridPane.rowIndex="2">
+                                <buttons>
+                                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="277.0" text="Add" />
+                                    <Button mnemonicParsing="false" text="Modify" />
+                                    <Button mnemonicParsing="false" text="Delete" />
+                                </buttons>
+                                 <GridPane.margin>
+                                    <Insets right="5.0" />
+                                 </GridPane.margin>
+                              </ButtonBar>
                                     </children>
                                 </GridPane>
                             </children>

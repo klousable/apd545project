@@ -57,7 +57,7 @@
                         <Insets right="5.0" />
                      </HBox.margin>
                   </Button>
-                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="130.0" text="Cancel" />
+                  <Button cancelButton="true" mnemonicParsing="false" prefHeight="25.0" prefWidth="130.0" text="Cancel" />
                </children>
                <padding>
                   <Insets top="30.0" />
@@ -71,7 +71,7 @@
                   <TableColumn prefWidth="94.0" text="Price" />
               </columns>
             </TableView>
-            <VBox alignment="TOP_CENTER" prefHeight="279.0" prefWidth="136.0" spacing="5.0" GridPane.columnIndex="2" GridPane.rowIndex="7">
+            <VBox alignment="TOP_CENTER" prefHeight="262.0" prefWidth="131.0" spacing="5.0" GridPane.columnIndex="2" GridPane.rowIndex="7">
                <children>
                   <Button mnemonicParsing="false" prefHeight="33.0" prefWidth="136.0" text="Add Room">
                      <VBox.margin>
@@ -91,7 +91,7 @@
                      </VBox.margin></Button>
                </children>
                <GridPane.margin>
-                  <Insets left="10.0" />
+                  <Insets />
                </GridPane.margin>
             </VBox>
             <Label alignment="CENTER" prefHeight="17.0" prefWidth="446.0" text="Room Selection:" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="6">
@@ -110,6 +110,7 @@
             <DatePicker GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <DatePicker GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <Label alignment="CENTER" prefHeight="17.0" prefWidth="447.0" text="Error-handling message for room selection." textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+            <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="134.0" text="Add Existing Guest" GridPane.columnIndex="2" GridPane.rowIndex="9" />
             </children>
         </GridPane>
     </children>

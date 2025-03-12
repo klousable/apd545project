@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="521.0" prefWidth="880.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="apdworkshop.controllers.InventoryController">
+    <padding>
+        <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+    </padding>
+    <children>
+        <GridPane layoutX="118.0" layoutY="166.0" prefHeight="511.0" prefWidth="792.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints maxHeight="236.0" minHeight="10.0" prefHeight="45.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="449.0" minHeight="10.0" prefHeight="417.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="449.0" minHeight="10.0" prefHeight="54.0" vgrow="SOMETIMES" />
+            </rowConstraints>
+            <children>
+                <SplitPane dividerPositions="0.45" prefHeight="160.0" prefWidth="200.0" GridPane.rowIndex="1">
+                    <items>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                            <children>
+                                <GridPane layoutX="28.0" layoutY="112.0" prefHeight="410.0" prefWidth="321.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    </columnConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints maxHeight="140.0" minHeight="0.0" prefHeight="38.0" vgrow="SOMETIMES" />
+                                        <RowConstraints maxHeight="367.0" minHeight="10.0" prefHeight="316.0" vgrow="SOMETIMES" />
+                                        <RowConstraints maxHeight="82.0" minHeight="10.0" prefHeight="41.0" vgrow="SOMETIMES" />
+                                    </rowConstraints>
+                                    <children>
+                                        <ButtonBar prefHeight="49.0" prefWidth="402.0" GridPane.rowIndex="2">
+                                            <buttons>
+                                                <Button fx:id="addPartButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="240.0" text="Add" />
+                                                <Button fx:id="modifyPartButton" mnemonicParsing="false" text="Modify" />
+                                                <Button fx:id="deletePartButton" mnemonicParsing="false" prefHeight="25.0" text="Delete" />
+                                            </buttons>
+                                            <GridPane.margin>
+                                                <Insets left="5.0" right="5.0" />
+                                            </GridPane.margin>
+                                        </ButtonBar>
+                                        <TableView fx:id="partTableView" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
+                                            <columns>
+                                                <TableColumn fx:id="partIdColumn" prefWidth="71.0" text="ID" />
+                                                <TableColumn fx:id="partNameColumn" prefWidth="95.0" text="Name" />
+                                                <TableColumn fx:id="partInventoryColumn" minWidth="0.0" prefWidth="106.0" text="Phone" />
+                                    <TableColumn prefWidth="106.0" text="Email" />
+                                            </columns>
+                                        </TableView>
+                                        <HBox prefHeight="100.0" prefWidth="200.0">
+                                            <children>
+                                                <Label alignment="CENTER" prefHeight="60.0" prefWidth="231.0" text="Guests" textAlignment="CENTER">
+                                                    <HBox.margin>
+                                                        <Insets right="10.0" />
+                                                    </HBox.margin>
+                                                    <font>
+                                                        <Font name="System Bold" size="12.0" />
+                                                    </font></Label>
+                                                <TextField fx:id="partSearch" prefHeight="25.0" prefWidth="299.0" promptText="Search by guest name or phone number...">
+                                                    <HBox.margin>
+                                                        <Insets right="5.0" top="10.0" />
+                                                    </HBox.margin></TextField>
+                                            </children>
+                                        </HBox>
+                                    </children>
+                                </GridPane>
+                            </children>
+                        </AnchorPane>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                            <children>
+                                <GridPane prefHeight="407.0" prefWidth="412.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    </columnConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints maxHeight="140.0" minHeight="0.0" prefHeight="38.0" vgrow="SOMETIMES" />
+                                        <RowConstraints maxHeight="367.0" minHeight="10.0" prefHeight="316.0" vgrow="SOMETIMES" />
+                                        <RowConstraints maxHeight="82.0" minHeight="10.0" prefHeight="41.0" vgrow="SOMETIMES" />
+                                    </rowConstraints>
+                                    <children>
+                                        <ButtonBar prefHeight="44.0" prefWidth="423.0" GridPane.rowIndex="2">
+                                            <buttons>
+                                                <Button fx:id="addProductButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="240.0" text="Create" />
+                                                <Button fx:id="modifyProductButton" mnemonicParsing="false" text="Modify" />
+                                                <Button fx:id="deleteProductButton" mnemonicParsing="false" prefHeight="25.0" text="Delete" />
+                                    <Button mnemonicParsing="false" text="Checkout" />
+                                            </buttons>
+                                            <GridPane.margin>
+                                                <Insets left="5.0" right="5.0" />
+                                            </GridPane.margin>
+                                        </ButtonBar>
+                                        <TableView fx:id="productTableView" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
+                                            <columns>
+                                                <TableColumn fx:id="productIdColumn" prefWidth="110.0" text="Reservation ID" />
+                                                <TableColumn fx:id="productNameColumn" prefWidth="76.0" text="Guest ID" />
+                                                <TableColumn fx:id="productInventoryColumn" minWidth="0.0" prefWidth="82.0" text="Room ID" />
+                                                <TableColumn fx:id="productPriceColumn" prefWidth="96.0" text="Room Type" />
+                                    <TableColumn prefWidth="98.0" text="Status" />
+                                            </columns>
+                                        </TableView>
+                                        <HBox prefHeight="100.0" prefWidth="200.0">
+                                            <children>
+                                                <Label alignment="CENTER" prefHeight="42.0" prefWidth="194.0" text="Bookings" textAlignment="CENTER">
+                                                    <HBox.margin>
+                                                        <Insets right="10.0" />
+                                                    </HBox.margin>
+                                                    <font>
+                                                        <Font name="System Bold" size="12.0" />
+                                                    </font>
+                                                </Label>
+                                                <TextField fx:id="productSearch" prefHeight="25.0" prefWidth="260.0" promptText="Search by guest name or phone number...">
+                                                    <HBox.margin>
+                                                        <Insets right="5.0" top="10.0" />
+                                                    </HBox.margin>
+                                                </TextField>
+                                            </children>
+                                        </HBox>
+                                    </children>
+                                </GridPane>
+                            </children></AnchorPane>
+                    </items>
+                </SplitPane>
+                <Label fx:id="inventorySystemLabel" alignment="CENTER" prefHeight="20.0" prefWidth="842.0" text="Reservation Management:  (ID)">
+                    <font>
+                        <Font name="System Bold" size="14.0" />
+                    </font></Label>
+                <ButtonBar prefHeight="40.0" prefWidth="200.0" GridPane.rowIndex="2">
+                    <buttons>
+                        <Button fx:id="exitButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="121.0" text="Exit" />
+                    </buttons>
+                    <GridPane.margin>
+                        <Insets left="5.0" right="5.0" />
+                    </GridPane.margin>
+                </ButtonBar>
+            </children>
+        </GridPane>
+    </children>
+</AnchorPane>

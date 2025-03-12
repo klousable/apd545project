@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.media.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <GridPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <padding>
+                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+            </padding>
+            <rowConstraints>
+                <RowConstraints vgrow="SOMETIMES" />
+                <RowConstraints vgrow="SOMETIMES" />
+                <RowConstraints vgrow="ALWAYS" />
+                <RowConstraints vgrow="SOMETIMES" />
+            </rowConstraints>
+            <columnConstraints>
+                <ColumnConstraints hgrow="ALWAYS" />
+            </columnConstraints>
+
+            <!-- Welcome Message -->
+            <Label alignment="CENTER" prefHeight="40.0" prefWidth="788.0" text="Welcome to the Self-Service Kiosk!" textAlignment="CENTER" GridPane.rowIndex="0">
+                <font>
+                    <Font name="System Bold" size="28.0" />
+                </font>
+            </Label>
+
+            <!-- Admin Info Message -->
+            <Label alignment="CENTER" prefHeight="17.0" prefWidth="793.0" text="*Login page is for administrators only." textAlignment="CENTER" GridPane.rowIndex="1" />
+
+            <!-- Video Guide -->
+            <MediaView fitHeight="260.0" fitWidth="580.0" preserveRatio="true" GridPane.rowIndex="2" />
+
+            <!-- Buttons Section -->
+            <VBox alignment="CENTER" spacing="10.0" GridPane.rowIndex="3">
+                <children>
+                    <Button prefWidth="300.0" text="Self-Service Kiosk" />
+                    <Button prefWidth="300.0" text="Administrator Login" />
+                    <Button prefWidth="300.0" text="Exit" />
+                </children>
+            </VBox>
+        </GridPane>
+    </children>
+</AnchorPane>

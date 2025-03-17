@@ -1,8 +1,10 @@
-module com.example.apdfinalproject {
+module apdfinalproject {
     requires javafx.controls;
     requires javafx.fxml;
 
 
-    opens com.example.apdfinalproject to javafx.fxml;
-    exports com.example.apdfinalproject;
+    opens apdfinalproject to javafx.fxml;
+    exports apdfinalproject;
+    exports apdfinalproject.application;
+    opens apdfinalproject.application to javafx.fxml;
 }

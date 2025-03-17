@@ -1,4 +1,4 @@
-package com.example.apdfinalproject;
+package apdfinalproject.application;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

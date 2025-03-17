@@ -43,6 +43,7 @@
             <VBox alignment="CENTER" spacing="10.0" GridPane.rowIndex="4">
                 <children>
                     <Button prefWidth="300.0" text="Self-Service Kiosk" />
+               <Button prefWidth="300.0" text="Give Feedback" />
                     <Button prefWidth="300.0" text="Administrator Login" />
                     <Button prefWidth="300.0" text="Exit" />
                 </children>

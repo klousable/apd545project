@@ -21,3 +21,13 @@ public class HelloApplication extends Application {
         launch();
     }
 }
+//
+//notes for ui mockup
+//        guest does not need add existing, search by phone number and update id field if the guest exists
+//        start menu does not need a video, image works as well and text guide
+//        reservation menu needs a selected rooms and add rooms, make the window larger
+//        feedback button added to main menu, search by reservation id for privacy then add feedback
+//        add heading to admin-login
+//        main menu remove second table, add more column headings for guest name, phone number, price
+//        add button on the button to show available rooms
+//        admin cannot change bookings? forgot

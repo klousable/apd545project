@@ -48,7 +48,7 @@ public class HotelApplication extends Application {
             LOGGER.info("Database connection established.");
 
             // Load your FXML
-            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/views/start-menu.fxml")));
+            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/views/kiosk.fxml")));
             Scene scene = new Scene(root);
             primaryStage.setTitle("Hotel Reservation System");
             primaryStage.setScene(scene);

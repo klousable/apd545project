@@ -9,6 +9,6 @@ module apdfinalproject {
     exports apdfinalproject.database;
     opens apdfinalproject.database to javafx.fxml;
 
-//    exports apdfinalproject.controller;
-//    opens apdfinalproject.controller to javafx.fxml;
+    exports apdfinalproject.controllers;
+    opens apdfinalproject.controllers to javafx.fxml;
 }

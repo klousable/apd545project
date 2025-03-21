@@ -104,7 +104,7 @@ public class DatabaseAccess {
                             "check_in_date TEXT NOT NULL, " +
                             "check_out_date TEXT NOT NULL, " +
                             "number_of_guests INTEGER NOT NULL, " +
-                            "status TEXT NOT NULL CHECK(status IN ('PENDING', 'CONFIRMED', 'CHECKED_IN', 'CHECKED_OUT', 'CANCELLED')), " +
+                            "status TEXT NOT NULL CHECK(status IN ('CONFIRMED', 'CHECKED_IN', 'CHECKED_OUT', 'CANCELLED')), " +
                             "FOREIGN KEY (guest_id) REFERENCES guests(guest_id), " +
                             "FOREIGN KEY (room_id) REFERENCES rooms(room_id))");
 

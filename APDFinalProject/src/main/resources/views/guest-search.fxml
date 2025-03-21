@@ -19,10 +19,10 @@
          <children>
             <TableView fx:id="partTableView" prefHeight="289.0" prefWidth="513.0" GridPane.rowIndex="1">
                <columns>
-                  <TableColumn fx:id="partIdColumn" prefWidth="163.0" text="Booking ID" />
-                  <TableColumn prefWidth="103.0" text="Guest ID" />
-                  <TableColumn fx:id="partInventoryColumn" minWidth="0.0" prefWidth="125.0" text="Check-Out Date" />
-                  <TableColumn prefWidth="116.0" text="Check-in Date" />
+                  <TableColumn fx:id="bookingIdColumn" prefWidth="163.0" text="Booking ID" />
+                  <TableColumn fx:id="guestIdColumn" prefWidth="103.0" text="Guest ID" />
+                  <TableColumn fx:id="checkOutDateColumn" minWidth="0.0" prefWidth="125.0" text="Check-Out Date" />
+                  <TableColumn fx:id="checkInDateColumn" prefWidth="116.0" text="Check-in Date" />
                </columns>
             </TableView>
             <HBox prefHeight="47.0" prefWidth="588.0">
@@ -35,7 +35,7 @@
                         <Font name="System Bold" size="16.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="partSearch" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="336.0" promptText="Search by Booking ID...">
+                  <TextField fx:id="bookingSearch" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="336.0" promptText="Search by Booking ID...">
                      <HBox.margin>
                         <Insets right="5.0" top="10.0" />
                      </HBox.margin>
@@ -44,8 +44,8 @@
             </HBox>
             <ButtonBar prefHeight="77.0" prefWidth="503.0" GridPane.rowIndex="2">
                <buttons>
-                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="383.0" text="Select" />
-                  <Button mnemonicParsing="false" text="Cancel" />
+                  <Button fx:id="selectBookingButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="383.0" text="Select" />
+                  <Button fx:id="cancelButton" mnemonicParsing="false" text="Cancel" />
                </buttons>
                <GridPane.margin>
                   <Insets right="5.0" />

@@ -30,27 +30,27 @@
                 </Label>
                 <Label alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="131.0" text="Reservation ID:" textAlignment="RIGHT" GridPane.rowIndex="3" />
                 <Label alignment="TOP_RIGHT" prefHeight="207.0" prefWidth="93.0" text="Comments:" textAlignment="RIGHT" GridPane.rowIndex="5" />
-                <TextField fx:id="partNameField" disable="true" promptText="Automatically generated - Disabled" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                <TextField fx:id="reservationIdField" disable="true" promptText="Automatically generated - Disabled" GridPane.columnIndex="1" GridPane.rowIndex="3">
                     <GridPane.margin>
                         <Insets left="10.0" />
                     </GridPane.margin>
                 </TextField>
-                <TextField fx:id="partIdField" disable="true" prefHeight="25.0" prefWidth="222.0" promptText="Automatically generated - Disabled" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                <TextField fx:id="feedbackIdField" disable="true" prefHeight="25.0" prefWidth="222.0" promptText="Automatically generated - Disabled" GridPane.columnIndex="1" GridPane.rowIndex="1">
                     <GridPane.margin>
                         <Insets left="10.0" />
                     </GridPane.margin>
                 </TextField>
                 <Label alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="131.0" text="Feedback ID:" textAlignment="RIGHT" GridPane.rowIndex="1" />
                 <Label alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="153.0" text="Guest ID:" textAlignment="RIGHT" GridPane.rowIndex="2" />
-                <TextField disable="true" promptText="Automatically generated - Disabled" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                <TextField fx:id="guestIdField" disable="true" promptText="Automatically generated - Disabled" GridPane.columnIndex="1" GridPane.rowIndex="2">
                     <GridPane.margin>
                         <Insets left="10.0" />
                     </GridPane.margin></TextField>
                 <HBox alignment="TOP_CENTER" prefHeight="112.0" prefWidth="332.0" spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
                     <children>
-                        <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" prefHeight="25.0" prefWidth="176.0" text="Clear" />
-                        <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="169.0" text="Save" />
-                        <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="197.0" text="Cancel" />
+                        <Button fx:id="clearButton" alignment="BOTTOM_CENTER" mnemonicParsing="false" prefHeight="25.0" prefWidth="176.0" text="Clear" />
+                        <Button fx:id="saveButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="169.0" text="Save" />
+                        <Button fx:id="cancelButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="197.0" text="Cancel" />
                     </children>
                     <GridPane.margin>
                         <Insets />
@@ -60,8 +60,8 @@
                </padding>
                 </HBox>
             <Label alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="142.0" text="Rating:" textAlignment="RIGHT" GridPane.rowIndex="4" />
-            <Slider blockIncrement="0.0" majorTickUnit="1.0" max="5.0" min="1.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="1.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-            <TextArea prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <Slider fx:id="feedbackRatingField" blockIncrement="0.0" majorTickUnit="1.0" max="5.0" min="1.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="1.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <TextArea fx:id="feedbackCommentArea" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
             </children>
         </GridPane>
     </children>

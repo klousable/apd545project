@@ -23,7 +23,7 @@
                 <RowConstraints maxHeight="434.0" minHeight="0.0" prefHeight="121.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <Label fx:id="partTitle" alignment="CENTER" prefHeight="58.0" prefWidth="364.0" text="Add Guest" GridPane.columnIndex="1">
+                <Label fx:id="guestTitle" alignment="CENTER" prefHeight="58.0" prefWidth="364.0" text="Add Guest" GridPane.columnIndex="1">
                     <font>
                         <Font name="System Bold" size="20.0" />
                     </font>
@@ -47,7 +47,7 @@
                         <Insets left="10.0" />
                     </GridPane.margin>
                 </TextField>
-                <TextField fx:id="partIdField" disable="true" promptText="Automatically generated - Disabled" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                <TextField fx:id="guestIdField" disable="true" promptText="Automatically generated - Disabled" GridPane.columnIndex="1" GridPane.rowIndex="1">
                     <GridPane.margin>
                         <Insets left="10.0" />
                     </GridPane.margin>

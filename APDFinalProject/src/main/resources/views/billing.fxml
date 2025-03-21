@@ -33,41 +33,41 @@
                 <Label alignment="CENTER_RIGHT" prefHeight="20.0" prefWidth="166.0" text="Discount:" textAlignment="RIGHT" GridPane.rowIndex="4" />
                 <Label alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="169.0" text="Tax:" GridPane.rowIndex="5" />
                 <Label fx:id="partMax" alignment="CENTER_RIGHT" contentDisplay="TOP" prefHeight="17.0" prefWidth="216.0" text="Total:" textAlignment="RIGHT" GridPane.rowIndex="6" />
-                <TextField fx:id="partNameField" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                <TextField fx:id="billingAmountField" GridPane.columnIndex="1" GridPane.rowIndex="3">
                     <GridPane.margin>
                         <Insets left="10.0" />
                     </GridPane.margin>
                 </TextField>
-                <TextField fx:id="partMaxField" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                <TextField fx:id="billingTotalField" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="6">
                     <GridPane.margin>
                         <Insets left="10.0" />
                     </GridPane.margin>
                 </TextField>
-                <TextField fx:id="partIdField" disable="true" prefHeight="25.0" prefWidth="222.0" promptText="Automatically generated - Disabled" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                <TextField fx:id="billingIdField" disable="true" prefHeight="25.0" prefWidth="222.0" promptText="Automatically generated - Disabled" GridPane.columnIndex="1" GridPane.rowIndex="1">
                     <GridPane.margin>
                         <Insets left="10.0" />
                     </GridPane.margin>
                 </TextField>
                 <Label alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="131.0" text="Billing ID:" textAlignment="RIGHT" GridPane.rowIndex="1" />
-                <TextField fx:id="partInventoryLevelField" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                <TextField fx:id="billingDiscountField" GridPane.columnIndex="1" GridPane.rowIndex="4">
                     <GridPane.margin>
                         <Insets left="10.0" />
                     </GridPane.margin>
                 </TextField>
             <Label alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="153.0" text="Reservation ID:" textAlignment="RIGHT" GridPane.rowIndex="2" />
-            <TextField disable="true" promptText="Automatically generated - Disabled" GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <TextField fx:id="reservationIdField" disable="true" promptText="Automatically generated - Disabled" GridPane.columnIndex="1" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets left="10.0" />
                </GridPane.margin></TextField>
-            <Label prefHeight="17.0" prefWidth="237.0" text="..." GridPane.columnIndex="1" GridPane.rowIndex="5">
+            <Label fx:id="billingTaxField" prefHeight="17.0" prefWidth="237.0" text="..." GridPane.columnIndex="1" GridPane.rowIndex="5">
                <padding>
                   <Insets left="10.0" />
                </padding></Label>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="7">
                <children>
-                  <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" prefHeight="25.0" prefWidth="171.0" text="Clear" />
-                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="169.0" text="Checkout" />
-                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="197.0" text="Cancel" />
+                  <Button fx:id="clearButton" alignment="BOTTOM_CENTER" mnemonicParsing="false" prefHeight="25.0" prefWidth="171.0" text="Clear" />
+                  <Button fx:id="checkoutButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="169.0" text="Checkout" />
+                  <Button fx:id="cancelButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="197.0" text="Cancel" />
                </children>
                <GridPane.margin>
                   <Insets left="10.0" />

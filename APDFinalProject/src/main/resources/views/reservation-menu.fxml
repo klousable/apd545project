@@ -1,19 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.text.Font?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="566.0" prefWidth="970.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="apdworkshop.controllers.InventoryController">
+<AnchorPane prefHeight="566.0" prefWidth="970.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="apdworkshop.controllers.InventoryController">
     <padding>
         <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
     </padding>
@@ -32,20 +24,20 @@
                <children>
                   <TableView fx:id="productTableView" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
                      <columns>
-                        <TableColumn fx:id="productIdColumn" prefWidth="95.0" text="Reservation ID" />
-                        <TableColumn fx:id="productNameColumn" prefWidth="84.0" text="Guest ID" />
-                        <TableColumn prefWidth="92.0" text="Guest Name" />
-                        <TableColumn prefWidth="103.0" text="Phone Number" />
-                        <TableColumn prefWidth="122.0" text="Check-out Date" />
-                        <TableColumn prefWidth="125.0" text="Check-in Date" />
-                        <TableColumn prefWidth="97.0" text="Status" />
-                        <TableColumn prefWidth="104.0" text="Price" />
-                        <TableColumn prefWidth="117.0" text="Feedback" />
+                        <TableColumn fx:id="reservationIdColumn" prefWidth="95.0" text="Reservation ID" />
+                        <TableColumn fx:id="guestIdColumn" prefWidth="84.0" text="Guest ID" />
+                        <TableColumn fx:id="guestNameColumn" prefWidth="92.0" text="Guest Name" />
+                        <TableColumn fx:id="guestPhoneNumberColumn" prefWidth="103.0" text="Phone Number" />
+                        <TableColumn fx:id="reservationCheckOutDateColumn" prefWidth="122.0" text="Check-out Date" />
+                        <TableColumn fx:id="reservationCheckInDateColumn" prefWidth="125.0" text="Check-in Date" />
+                        <TableColumn fx:id="reservationStatusColumn" prefWidth="97.0" text="Status" />
+                        <TableColumn fx:id="reservationPriceColumn" prefWidth="104.0" text="Price" />
+                        <TableColumn fx:id="reservationFeedbackStatusColumn" prefWidth="117.0" text="Feedback" />
                      </columns>
                   </TableView>
                   <HBox prefHeight="25.0" prefWidth="850.0">
                      <children>
-                        <Label alignment="CENTER" prefHeight="54.0" prefWidth="718.0" text="Reservation Management: (Admin ID)" textAlignment="CENTER">
+                        <Label fx:id="reservationAdminLabel" alignment="CENTER" prefHeight="54.0" prefWidth="718.0" text="Reservation Management: (Admin ID)" textAlignment="CENTER">
                            <font>
                               <Font name="System Bold" size="18.0" />
                            </font>
@@ -53,7 +45,7 @@
                               <Insets top="3.0" />
                            </HBox.margin>
                         </Label>
-                        <TextField fx:id="productSearch" prefHeight="25.0" prefWidth="435.0" promptText="Search by guest name or phone number...">
+                        <TextField fx:id="bookingSearchField" prefHeight="25.0" prefWidth="435.0" promptText="Search by guest name or phone number...">
                            <HBox.margin>
                               <Insets right="5.0" top="15.0" />
                            </HBox.margin>
@@ -62,13 +54,13 @@
                   </HBox>
                   <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0" GridPane.rowIndex="2">
                      <children>
-                        <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="173.0" text="View Available Rooms" />
-                        <Button disable="true" mnemonicParsing="false" prefHeight="25.0" prefWidth="186.0" text="View Feedback" />
-                        <Button fx:id="addProductButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="207.0" text="Create" />
-                        <Button fx:id="modifyProductButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="162.0" text="Modify" />
-                        <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="157.0" text="Checkout" />
-                        <Button fx:id="deleteProductButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="127.0" text="Delete" />
-                        <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="164.0" text="Exit" />
+                        <Button fx:id="viewAvailableRoomsButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="173.0" text="View Available Rooms" />
+                        <Button fx:id="viewFeedbackButton" disable="true" mnemonicParsing="false" prefHeight="25.0" prefWidth="186.0" text="View Feedback" />
+                        <Button fx:id="addReservationButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="207.0" text="Create" />
+                        <Button fx:id="editReservationButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="162.0" text="Modify" />
+                        <Button fx:id="checkoutButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="157.0" text="Checkout" />
+                        <Button fx:id="deleteReservationButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="127.0" text="Delete" />
+                        <Button fx:id="exitButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="164.0" text="Exit" />
                      </children>
                   </HBox>
                </children>

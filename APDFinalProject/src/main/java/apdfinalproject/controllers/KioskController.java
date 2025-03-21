@@ -1,5 +1,6 @@
 package apdfinalproject.controllers;
 
+import apdfinalproject.database.DatabaseAccess;
 import apdfinalproject.models.Kiosk;
 
 import javafx.fxml.FXML;
@@ -132,6 +133,7 @@ public class KioskController {
     // "Exit" button
     @FXML
     private void handleExitAction() {
+        DatabaseAccess.closeConnection();
         System.exit(0);
     }
 }

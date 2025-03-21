@@ -6,10 +6,10 @@ import java.io.IOException;
 import java.util.logging.*;
 
 public class DatabaseAccess {
-    private static final Logger LOGGER = Logger.getLogger(DatabaseAccess.class.getName());
+    public static final Logger LOGGER = Logger.getLogger(DatabaseAccess.class.getName());
     private static final String DB_NAME = "hotel_reservation.db";
     // Use relative path for the database (relative to src/main/resources)
-    private static final String DB_PATH = "src/main/java/apdfinalproject/database/" + DB_NAME;
+    private static final String DB_PATH = "src/data/" + DB_NAME;
     private static final String DB_URL = "jdbc:sqlite:" + DB_PATH;
     private static Connection connection;
 
@@ -24,9 +24,9 @@ public class DatabaseAccess {
     private static void setupLogger() {
         try {
             // Use relative path for logs (relative to src/main/logs)
-            File logsDir = new File("src/main/logs");
+            File logsDir = new File("src/");
             if (!logsDir.exists()) logsDir.mkdirs();
-            FileHandler fileHandler = new FileHandler("src/main/logs/system_logs.%g.log", 1024 * 1024, 10, true);
+            FileHandler fileHandler = new FileHandler("src/logs/system_logs.%g.log", 1024 * 1024, 10, true);
             fileHandler.setFormatter(new SimpleFormatter());
             LOGGER.setLevel(Level.ALL);
             LOGGER.addHandler(fileHandler);

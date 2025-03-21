@@ -57,7 +57,7 @@ public class AdminController {
         try {
             Admin loggedInAdmin = validateLoginAndGetAdmin(username, password);
             if (loggedInAdmin != null) {
-                LOGGER.log(Level.INFO, "Admin '{0}' logged in successfully.", username);
+                LOGGER.log(Level.INFO, "Admin " + username + " logged in successfully.", username);
 
                 // Load reservation-menu.fxml
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/reservation-menu.fxml"));
@@ -88,6 +88,13 @@ public class AdminController {
             return admin;
         }
         return null;
+    }
+
+    @FXML
+    private void handleCancelLogin() {
+        // Close the current admin login window
+        Stage currentStage = (Stage) cancelButton.getScene().getWindow();
+        currentStage.close();
     }
 
     private void showAlert(String title, String message, AlertType type) {

@@ -6,8 +6,8 @@ public class ReservationMenuController {
 
     private Admin admin;
 
-    public ReservationMenuController(Admin admin) {
-        this.admin = admin;
+    public ReservationMenuController() {
+        // Default constructor
     }
 
     public void setAdmin(Admin admin) {

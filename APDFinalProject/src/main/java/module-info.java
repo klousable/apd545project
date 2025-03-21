@@ -1,10 +1,14 @@
 module apdfinalproject {
     requires javafx.controls;
     requires javafx.fxml;
+    requires org.xerial.sqlitejdbc;
 
-
-    opens apdfinalproject to javafx.fxml;
-    exports apdfinalproject;
     exports apdfinalproject.application;
     opens apdfinalproject.application to javafx.fxml;
+
+    exports apdfinalproject.database;
+    opens apdfinalproject.database to javafx.fxml;
+
+//    exports apdfinalproject.controller;
+//    opens apdfinalproject.controller to javafx.fxml;
 }

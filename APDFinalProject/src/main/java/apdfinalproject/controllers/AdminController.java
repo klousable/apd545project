@@ -21,6 +21,7 @@ public class AdminController {
 
     private final AdminDAO adminDAO;
     private static final Logger LOGGER = DatabaseAccess.LOGGER;
+    private Stage kioskStage;
 
     @FXML
     private TextField loginUsername;
@@ -37,13 +38,15 @@ public class AdminController {
         adminDAO = new AdminDAO(); // Initialize the DAO
     }
 
+    public void setKioskStage(Stage kioskStage) {
+        this.kioskStage = kioskStage;
+    }
     // Initialize method for setting up event listeners
     @FXML
     public void initialize() {
-        // Handling the login button action
-        loginButton.setOnAction(event -> handleLogin());
     }
 
+    @FXML
     private void handleLogin() {
         String username = loginUsername.getText();
         String password = loginPassword.getText();
@@ -63,15 +66,25 @@ public class AdminController {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/reservation-menu.fxml"));
                 Parent root = loader.load();
 
-                // Pass the admin object to the ReservationMenuController
+                // Set admin in controller
                 ReservationMenuController reservationMenuController = loader.getController();
                 reservationMenuController.setAdmin(loggedInAdmin);
 
-                // Set the new scene
-                Stage stage = (Stage) loginButton.getScene().getWindow();
-                stage.setScene(new Scene(root));
-                stage.setTitle("Admin Dashboard - Reservations");
-                stage.show();
+                // Show reservation menu in new stage
+                Stage reservationStage = new Stage();
+                reservationStage.setScene(new Scene(root));
+                reservationStage.setTitle("Admin Dashboard - Reservations");
+                reservationStage.show();
+
+                // Close both the login window and the kiosk window
+                Stage loginStage = (Stage) loginButton.getScene().getWindow();
+                loginStage.close();
+
+                // Close kiosk stage (if stored globally)
+                if (KioskController.kioskStage != null) {
+                    KioskController.kioskStage.close();
+                }
+
             } else {
                 showAlert("Invalid Login", "Invalid username or password!", AlertType.ERROR);
                 loginUsername.requestFocus();
@@ -92,15 +105,29 @@ public class AdminController {
 
     @FXML
     private void handleCancelLogin() {
-        // Close the current admin login window
-        Stage currentStage = (Stage) cancelButton.getScene().getWindow();
-        currentStage.close();
+        // Create a confirmation alert
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setTitle("Cancel Login");
+        alert.setHeaderText("Are you sure you want to cancel the login?");
+        alert.setContentText("Any unsaved data will be lost.");
+
+        // Show the confirmation and wait for the user's response
+        alert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                // Close the current window if the user confirms
+                Stage currentStage = (Stage) cancelButton.getScene().getWindow();
+                currentStage.close();
+            }
+        });
     }
 
     private void showAlert(String title, String message, AlertType type) {
+        // Create and configure the alert
         Alert alert = new Alert(type);
         alert.setTitle(title);
-        alert.setContentText(message);
+        alert.setHeaderText(message);
+
+        // Show the alert and wait for the user's response
         alert.showAndWait();
     }
 }

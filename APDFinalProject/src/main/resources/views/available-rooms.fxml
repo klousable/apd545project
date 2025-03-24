@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="480.0" prefWidth="528.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.views.GuestSearch">
+<AnchorPane prefHeight="480.0" prefWidth="528.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="apdfinalproject.controllers.AvailableRoomController">
     <children>
         <GridPane prefHeight="410.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <columnConstraints>
@@ -17,7 +17,7 @@
                 <RowConstraints maxHeight="192.0" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <TableView fx:id="partTableView" prefHeight="289.0" prefWidth="513.0" GridPane.rowIndex="1">
+                <TableView fx:id="roomTableView" prefHeight="289.0" prefWidth="513.0" GridPane.rowIndex="1">
                     <columns>
                         <TableColumn fx:id="roomIdColumn" prefWidth="78.0" text="Room ID" />
                         <TableColumn fx:id="roomTypeColumn" minWidth="0.0" prefWidth="97.0" text="Room Type" />
@@ -40,7 +40,7 @@
                 </HBox>
                 <ButtonBar prefHeight="77.0" prefWidth="503.0" GridPane.rowIndex="2">
                     <buttons>
-                        <Button fx:id="exitButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="182.0" text="Exit" />
+                        <Button fx:id="exitButton" mnemonicParsing="false" onAction="#handleExitAction" prefHeight="25.0" prefWidth="182.0" text="Exit" />
                     </buttons>
                     <GridPane.margin>
                         <Insets right="5.0" />

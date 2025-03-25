@@ -18,11 +18,21 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.sql.SQLException;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class BillingController {
 
+    private int selectedReservationId;
+    private Admin admin;
+    private static final Logger LOGGER = DatabaseAccess.LOGGER;
+    private ReservationDAO reservationDAO;
+    private BillingDAO billingDAO;
+    private Billing selectedBill;
+
+    @FXML
+    private Label billReminderLabel;
     @FXML
     private TextField billingAmountField;
     @FXML
@@ -42,19 +52,18 @@ public class BillingController {
     @FXML
     private Button cancelButton;
 
-    private int selectedReservationId;
-    private Admin admin;
-    private static final Logger LOGGER = DatabaseAccess.LOGGER;
-    private ReservationDAO reservationDAO;
-    private BillingDAO billingDAO;
 
     public BillingController() throws SQLException {
         this.reservationDAO = new ReservationDAO();
         this.billingDAO = new BillingDAO();
+        this.admin = new Admin(1, "admin1", "pass1");
     }
 
     @FXML
     public void initialize() throws SQLException {
+
+        // TO DO: Add functionality to load previous bill for read-only
+        // Check if selected bill exists before binding ?
 
         // Ensure numeric values in TextFields
         DoubleProperty amount = new SimpleDoubleProperty();
@@ -90,21 +99,85 @@ public class BillingController {
         Platform.runLater(() -> {
             if (selectedReservationId != 0) {
                 try {
-                    loadReservationData();
+                    loadReservationData(); // Load reservation info
+                    loadPreviousBilling(); // Load previous bill if available
                 } catch (SQLException e) {
-                    LOGGER.log(Level.SEVERE, "Error loading reservation data", e);
+                    LOGGER.log(Level.SEVERE, "Error loading reservation or billing data", e);
                 }
             } else {
                 LOGGER.warning("No Reservation ID selected!");
             }
         });
+
     }
+
+    private void loadPreviousBilling() throws SQLException {
+        Optional<Billing> existingBill = Optional.ofNullable(billingDAO.getBillingByReservationId(selectedReservationId));
+
+        if (existingBill.isPresent()) {
+            Billing bill = existingBill.get();
+
+            // Unbind text properties before setting them manually
+            if (reservationIdField.textProperty().isBound()) {
+                reservationIdField.textProperty().unbind();
+            }
+            if (billingIdField.textProperty().isBound()) {
+                billingIdField.textProperty().unbind();
+            }
+            if (billingAmountField.textProperty().isBound()) {
+                billingAmountField.textProperty().unbind();
+            }
+            if (billingDiscountField.textProperty().isBound()) {
+                billingDiscountField.textProperty().unbind();
+            }
+            if (billingTaxField.textProperty().isBound()) {
+                billingTaxField.textProperty().unbind();
+            }
+            if (billingTotalField.textProperty().isBound()) {
+                billingTotalField.textProperty().unbind();
+            }
+
+            // Populate fields
+            billReminderLabel.setText("* Please remind the customer they can leave feedback at the kiosk.");
+            billReminderLabel.setVisible(true);
+            reservationIdField.setText(String.valueOf(bill.reservationIDProperty().get()));
+            billingIdField.setText(String.valueOf(bill.billIDProperty().get()));
+            billingAmountField.setText(String.format("%.2f", bill.amountProperty().get()));
+            billingDiscountField.setText(String.format("%.2f", bill.discountProperty().get()));
+            billingTaxField.setText(String.format("%.2f", bill.taxProperty().get()));
+            billingTotalField.setText(String.format("%.2f", bill.totalAmountProperty().get()));
+
+            // Unbind disable properties before setting them manually
+            if (clearButton.disableProperty().isBound()) {
+                clearButton.disableProperty().unbind();
+            }
+            if (checkoutButton.disableProperty().isBound()) {
+                checkoutButton.disableProperty().unbind();
+            }
+            if (billingDiscountField.disableProperty().isBound()) {
+                billingDiscountField.disableProperty().unbind();
+            }
+
+            // Disable the clear and save buttons, and the discount field
+            clearButton.setDisable(true);
+            checkoutButton.setDisable(true);
+            billingDiscountField.setDisable(true);
+
+            LOGGER.info("Loaded existing billing for reservation ID: " + selectedReservationId);
+        } else {
+            LOGGER.info("No previous billing found for reservation ID: " + selectedReservationId);
+        }
+    }
+
+
 
     // Set the selected reservation ID for querying from the admin view
     public void setReservationId(int reservationId) {
         LOGGER.info("Setting selected reservation ID: " + reservationId);
         this.selectedReservationId = reservationId;
     }
+
+    // Set Admin for logging purposes
     public void setAdmin(Admin admin) {
         this.admin = admin;
     }
@@ -181,14 +254,14 @@ public class BillingController {
             billingDAO.createBilling(billing);
 
             // Log the successful creation of the billing entry
-            LOGGER.log(Level.INFO, "Admin: " + admin.getUsername() + " successfully created Billing with ID: " , billId);
+            LOGGER.log(Level.INFO, "Admin: " + admin.getUsername() + " successfully created Billing with ID: " + billId);
 
             // Update the reservation status to 'checked out' in the database
             reservationDAO.checkOutReservation(selectedReservationId);
             LOGGER.log(Level.INFO, "Reservation ID: " + selectedReservationId + " has been checked out successfully.");
 
             // Show a success alert to the admin
-            showBillInAlert();
+            showBillInAlert(billing);
 
         } catch (SQLException e) {
             // Log the error and show failure alert
@@ -263,9 +336,9 @@ public class BillingController {
         billingDiscountField.setStyle("");
     }
 
-    private void showBillInAlert() {
+    private void showBillInAlert(Billing billing) {
         // Get the formatted bill message
-        String billMessage = printBill();
+        String billMessage = printBill(billing);
 
         // Create a custom alert dialog
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -300,26 +373,38 @@ public class BillingController {
         alert.showAndWait();
     }
 
-
-
-
-    private String printBill() {
-        // Format the bill details
+    private String printBill(Billing billing) {
         StringBuilder billDetails = new StringBuilder();
 
         // Add the Bill Header
-        billDetails.append("----- BILLING DETAILS -----\n");
-        billDetails.append("Reservation ID: ").append(selectedReservationId).append("\n");
-        billDetails.append("Amount: $").append(String.format("%.2f", parseField(billingAmountField))).append("\n");
-        billDetails.append("Discount: $").append(String.format("%.2f", parseField(billingDiscountField))).append("\n");
-        billDetails.append("Tax (13%): $").append(String.format("%.2f", Double.parseDouble(billingTaxField.getText()))).append("\n");
-        billDetails.append("Total: $").append(String.format("%.2f", parseField(billingTotalField))).append("\n");
+        billDetails.append(formatHeader(billing));
+
+        // Add the billing details (amount, discount, etc.)
+        billDetails.append(formatBillingDetails(billing));
 
         // Add footer with a reminder to ask for feedback
         billDetails.append("\n--------------------------\n");
         billDetails.append("Thank you for your business!\n");
 
         return billDetails.toString();
+    }
+
+    private String formatHeader(Billing billing) {
+        return String.format("----- BILLING DETAILS -----\n" +
+                        "Billing ID: %d\n" +
+                        "Reservation ID: %d\n",
+                billing.getBillID(), billing.getReservationID());
+    }
+
+    private String formatBillingDetails(Billing billing) {
+        return String.format("Amount: $%.2f\n" +
+                        "Discount: $%.2f\n" +
+                        "Tax (13%%): $%.2f\n" +
+                        "Total: $%.2f\n",
+                billing.getAmount(),       // Use getter from Billing object
+                billing.getDiscount(),     // Use getter from Billing object
+                billing.getTax(),          // Use getter from Billing object
+                billing.getTotalAmount());       // Use getter from Billing object
     }
 
 

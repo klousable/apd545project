@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="378.0" prefWidth="556.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="apdworkshop.controllers.PartController">
+<AnchorPane prefHeight="378.0" prefWidth="556.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="apdfinalproject.controllers.BillingController">
     <children>
         <GridPane hgap="5.0" layoutX="20.0" layoutY="20.0" prefHeight="515.0" prefWidth="432.0" vgap="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <columnConstraints>
@@ -24,7 +24,7 @@
             <RowConstraints maxHeight="434.0" minHeight="10.0" prefHeight="96.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <Label fx:id="partTitle" alignment="CENTER" prefHeight="58.0" prefWidth="364.0" text="Billing" GridPane.columnIndex="1">
+                <Label fx:id="billingTitle" alignment="CENTER" prefHeight="58.0" prefWidth="364.0" text="Billing" GridPane.columnIndex="1">
                     <font>
                         <Font name="System Bold" size="20.0" />
                     </font>
@@ -32,8 +32,8 @@
                 <Label alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="131.0" text="Amount:" textAlignment="RIGHT" GridPane.rowIndex="3" />
                 <Label alignment="CENTER_RIGHT" prefHeight="20.0" prefWidth="166.0" text="Discount:" textAlignment="RIGHT" GridPane.rowIndex="4" />
                 <Label alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="169.0" text="Tax:" GridPane.rowIndex="5" />
-                <Label fx:id="partMax" alignment="CENTER_RIGHT" contentDisplay="TOP" prefHeight="17.0" prefWidth="216.0" text="Total:" textAlignment="RIGHT" GridPane.rowIndex="6" />
-                <TextField fx:id="billingAmountField" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                <Label alignment="CENTER_RIGHT" contentDisplay="TOP" prefHeight="17.0" prefWidth="216.0" text="Total:" textAlignment="RIGHT" GridPane.rowIndex="6" />
+                <TextField fx:id="billingAmountField" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="3">
                     <GridPane.margin>
                         <Insets left="10.0" />
                     </GridPane.margin>
@@ -65,9 +65,9 @@
                </padding></Label>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="7">
                <children>
-                  <Button fx:id="clearButton" alignment="BOTTOM_CENTER" mnemonicParsing="false" prefHeight="25.0" prefWidth="171.0" text="Clear" />
-                  <Button fx:id="checkoutButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="169.0" text="Checkout" />
-                  <Button fx:id="cancelButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="197.0" text="Cancel" />
+                  <Button fx:id="clearButton" alignment="BOTTOM_CENTER" mnemonicParsing="false" onAction="#handleClearAction" prefHeight="25.0" prefWidth="171.0" text="Clear" />
+                  <Button fx:id="checkoutButton" mnemonicParsing="false" onAction="#handleCheckOutAction" prefHeight="25.0" prefWidth="169.0" text="Checkout" />
+                  <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#handleCancelAction" prefHeight="25.0" prefWidth="197.0" text="Cancel" />
                </children>
                <GridPane.margin>
                   <Insets left="10.0" />

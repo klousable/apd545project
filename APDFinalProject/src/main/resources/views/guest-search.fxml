@@ -17,7 +17,7 @@
             <RowConstraints maxHeight="192.0" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <TableView fx:id="partTableView" prefHeight="289.0" prefWidth="513.0" GridPane.rowIndex="1">
+            <TableView fx:id="reservationTableView" prefHeight="289.0" prefWidth="513.0" GridPane.rowIndex="1">
                <columns>
                   <TableColumn fx:id="bookingIdColumn" prefWidth="163.0" text="Booking ID" />
                   <TableColumn fx:id="guestIdColumn" prefWidth="103.0" text="Guest ID" />
@@ -44,8 +44,8 @@
             </HBox>
             <ButtonBar prefHeight="77.0" prefWidth="503.0" GridPane.rowIndex="2">
                <buttons>
-                  <Button fx:id="selectBookingButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="383.0" text="Select" />
-                  <Button fx:id="cancelButton" mnemonicParsing="false" text="Cancel" />
+                  <Button fx:id="selectBookingButton" mnemonicParsing="false" onAction="#handleSelectBookingAction" prefHeight="25.0" prefWidth="383.0" text="Select" />
+                  <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#handleCancelAction" text="Cancel" />
                </buttons>
                <GridPane.margin>
                   <Insets right="5.0" />

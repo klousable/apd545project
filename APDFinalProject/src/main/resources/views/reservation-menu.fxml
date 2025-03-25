@@ -22,7 +22,7 @@
                   <RowConstraints maxHeight="82.0" minHeight="10.0" prefHeight="41.0" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
-                  <TableView fx:id="productTableView" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
+                  <TableView fx:id="reservationTableView" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
                      <columns>
                         <TableColumn fx:id="reservationIdColumn" prefWidth="95.0" text="Reservation ID" />
                         <TableColumn fx:id="guestIdColumn" prefWidth="84.0" text="Guest ID" />
@@ -54,13 +54,14 @@
                   </HBox>
                   <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0" GridPane.rowIndex="2">
                      <children>
-                        <Button fx:id="viewAvailableRoomsButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="173.0" text="View Available Rooms" />
-                        <Button fx:id="viewFeedbackButton" disable="true" mnemonicParsing="false" prefHeight="25.0" prefWidth="186.0" text="View Feedback" />
-                        <Button fx:id="addReservationButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="207.0" text="Create" />
-                        <Button fx:id="editReservationButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="162.0" text="Modify" />
-                        <Button fx:id="checkoutButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="157.0" text="Checkout" />
-                        <Button fx:id="deleteReservationButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="127.0" text="Delete" />
-                        <Button fx:id="exitButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="164.0" text="Exit" />
+                        <Button fx:id="viewAvailableRoomsButton" mnemonicParsing="false" onAction="#handleViewAvailableRoomsAction" prefHeight="25.0" prefWidth="224.0" text="View Available Rooms" />
+                        <Button fx:id="viewFeedbackButton" disable="true" mnemonicParsing="false" onAction="#handleViewFeedback" prefHeight="25.0" prefWidth="186.0" text="View Feedback" />
+                        <Button fx:id="addReservationButton" mnemonicParsing="false" onAction="#handleAddReservationAction" prefHeight="25.0" prefWidth="207.0" text="Create" />
+                        <Button fx:id="editReservationButton" mnemonicParsing="false" onAction="#handleEditReservationAction" prefHeight="25.0" prefWidth="162.0" text="Modify" />
+                        <Button fx:id="checkoutButton" mnemonicParsing="false" onAction="#handleCheckOutAction" prefHeight="25.0" prefWidth="157.0" text="Checkout" />
+                        <Button fx:id="cancelReservationButton" mnemonicParsing="false" onAction="#handleCancelBookingAction" prefHeight="25.0" prefWidth="209.0" text="Cancel Booking" />
+                        <Button fx:id="deleteReservationButton" mnemonicParsing="false" onAction="#handleDeleteReservationAction" prefHeight="25.0" prefWidth="142.0" text="Delete" />
+                        <Button fx:id="exitButton" mnemonicParsing="false" onAction="#handleExitAction" prefHeight="25.0" prefWidth="164.0" text="Exit" />
                      </children>
                   </HBox>
                </children>

@@ -56,7 +56,7 @@
                                     <Insets />
                                  </GridPane.margin>
                               </Label>
-                              <Button fx:id="addGuestDetailsButton" disable="true" mnemonicParsing="false" prefHeight="25.0" prefWidth="254.0" text="Add Guest Details" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                              <Button fx:id="addGuestDetailsButton" disable="true" mnemonicParsing="false" onAction="#handleAddGuestAction" prefHeight="25.0" prefWidth="254.0" text="Add Guest Details" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                               <Label alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="145.0" text="Guest Info:" textAlignment="RIGHT" GridPane.rowIndex="5" />
                               <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" prefHeight="17.0" prefWidth="170.0" text="Check-in Date:" GridPane.rowIndex="2" />
                               <Label alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="105.0" text="Check-out Date:" GridPane.rowIndex="3" />
@@ -110,14 +110,14 @@
                                                 <Font name="System Bold" size="14.0" />
                                              </font>
                                           </Label>
-                                          <Button fx:id="roomRulesButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="25.0" prefWidth="206.0" text="View Room Rules">
+                                          <Button fx:id="roomRulesButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleViewRoomRules" prefHeight="25.0" prefWidth="206.0" text="View Room Rules">
                                              <HBox.margin>
                                                 <Insets right="10.0" top="5.0" />
                                              </HBox.margin>
                                           </Button>
                                        </children>
                                     </HBox>
-                                    <Label fx:id="recommendedRoomsLabel" alignment="CENTER" prefHeight="25.0" prefWidth="498.0" text="The recommended number of rooms: ..." textAlignment="CENTER" GridPane.rowIndex="2">
+                                    <Label fx:id="recommendedRoomsLabel" alignment="CENTER" prefHeight="17.0" prefWidth="554.0" text="The recommended number of rooms: ..." textAlignment="CENTER" GridPane.rowIndex="2">
                                        <GridPane.margin>
                                           <Insets top="2.0" />
                                        </GridPane.margin></Label>

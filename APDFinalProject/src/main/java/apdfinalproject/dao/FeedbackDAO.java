@@ -5,6 +5,7 @@ import apdfinalproject.models.Feedback;
 
 import java.sql.*;
 import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class FeedbackDAO {
     private final Connection connection;
@@ -25,6 +26,20 @@ public class FeedbackDAO {
             }
         }
         return "N/A"; // No feedback exists for the reservation
+    }
+
+    public int getNextFeedbackId() {
+        String query = "SELECT MAX(feedback_id) FROM feedback";
+        try (PreparedStatement stmt = connection.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
+
+            if (rs.next()) {
+                return rs.getInt(1) + 1;
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Error retrieving next feedback ID", e);
+        }
+        return 1;  // Default to 1 if table is empty
     }
 
     public Feedback getFeedbackByReservationId(int reservationId) throws SQLException {

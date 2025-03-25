@@ -50,6 +50,8 @@ public class FeedbackController {
         saveButton.setDisable(true);
         clearButton.setDisable(false);
         cancelButton.setDisable(false);
+        // Assume that we are adding feedback first so load the next feedback ID for view
+        feedbackIdField.setText(String.valueOf(feedbackDAO.getNextFeedbackId()));
 
         Platform.runLater(() -> {
             if (selectedReservationId != 0) {

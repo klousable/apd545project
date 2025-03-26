@@ -1,6 +1,10 @@
 package apdfinalproject.dao;
 
 import apdfinalproject.database.DatabaseAccess;
+import apdfinalproject.models.Room;
+import apdfinalproject.models.RoomType;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -43,7 +47,7 @@ public class ReservationRoomsDAO {
     }
 
     // Get all rooms for a reservation
-    public List<Integer> getRoomsForReservation(int reservationId) throws SQLException {
+    public List<Integer> getRoomIdsForReservation(int reservationId) throws SQLException {
         List<Integer> roomIds = new ArrayList<>();
         String sql = "SELECT room_id FROM reservation_rooms WHERE reservation_id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -55,4 +59,36 @@ public class ReservationRoomsDAO {
         }
         return roomIds;
     }
+
+    public ObservableList<Room> getAllRoomsForReservation(int reservationId) throws SQLException {
+        ObservableList<Room> rooms = FXCollections.observableArrayList();
+
+        String sql = "SELECT r.room_id, r.room_type, r.number_of_beds, r.price, r.status " +
+                "FROM reservation_rooms rr " +
+                "JOIN rooms r ON rr.room_id = r.room_id " +
+                "WHERE rr.reservation_id = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, reservationId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    int roomID = rs.getInt("room_id");
+                    String roomTypeStr = rs.getString("room_type");
+                    int numberOfBeds = rs.getInt("number_of_beds");
+                    double price = rs.getDouble("price");
+                    String status = rs.getString("status");
+
+                    // Assuming RoomType is an enum, adjust as needed
+                    RoomType roomType = RoomType.valueOf(roomTypeStr.toUpperCase());
+
+                    // Create Room object
+                    Room room = new Room(roomID, roomType, reservationId, numberOfBeds, price, status);
+                    rooms.add(room);
+                }
+            }
+        }
+        return rooms;
+    }
+
+
 }

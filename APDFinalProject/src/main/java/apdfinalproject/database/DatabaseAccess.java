@@ -167,8 +167,8 @@ public class DatabaseAccess {
                     "('DOUBLE', 2, 175.00, 'AVAILABLE'), " +
                     "('DELUXE', 2, 250.00, 'AVAILABLE'), " +
                     "('DELUXE', 2, 280.00, 'AVAILABLE'), " +
-                    "('PENTHOUSE', 3, 600.00, 'AVAILABLE'), " +
-                    "('PENTHOUSE', 3, 650.00, 'AVAILABLE')");
+                    "('PENTHOUSE', 2, 600.00, 'AVAILABLE'), " +
+                    "('PENTHOUSE', 2, 650.00, 'AVAILABLE')");
 
             statement.execute("INSERT INTO reservations (guest_id, check_in_date, check_out_date, number_of_guests, status) VALUES " +
                                 "(1, '2025-03-21', '2025-03-25', 2, 'CONFIRMED'), " +

@@ -10,7 +10,6 @@ public class Room {
     private final DoubleProperty price;
     private final StringProperty status;
 
-    // Updated Constructor
     public Room(int roomID, RoomType roomType, int reservationID, int numberOfBeds, double price, String status) {
         this.roomID = new SimpleIntegerProperty(roomID);
         this.roomType = new SimpleObjectProperty<>(roomType);
@@ -18,8 +17,34 @@ public class Room {
         this.numberOfBeds = new SimpleIntegerProperty(numberOfBeds);
         this.price = new SimpleDoubleProperty(price);
         this.status = new SimpleStringProperty(status);
+
+        validateRoomDetails(roomType, numberOfBeds);
     }
 
+    private void validateRoomDetails(RoomType roomType, int numberOfBeds) {
+        switch (roomType) {
+            case SINGLE:
+                if (numberOfBeds != 1) {
+                    throw new IllegalArgumentException("Single rooms must have 1 bed.");
+                }
+                break;
+            case DOUBLE:
+                if (numberOfBeds != 2) {
+                    throw new IllegalArgumentException("Double rooms must have 2 beds.");
+                }
+                break;
+            case DELUXE:
+                if (numberOfBeds <0) {
+                    throw new IllegalArgumentException("Deluxe rooms must have at least 1 bed.");
+                }
+                break;
+            case PENTHOUSE:
+                if (numberOfBeds < 1 || numberOfBeds > 2) {
+                    throw new IllegalArgumentException("Deluxe and Penthouse rooms must have 1 or 2 beds.");
+                }
+                break;
+        }
+    }
     public int getRoomID() {
         return roomID.get();
     }

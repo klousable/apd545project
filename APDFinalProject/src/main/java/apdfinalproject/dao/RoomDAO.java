@@ -35,16 +35,13 @@ public class RoomDAO {
         // Modify the query to set reservation_id to NULL only if status is AVAILABLE
         if (newStatus.equals("AVAILABLE")) {
             sql += ", reservation_id = NULL"; // Set reservation_id to NULL only if status is AVAILABLE
-            LOGGER.info("Setting reservation to null for room with ID: " + roomId);
-
         }
+
         sql += " WHERE room_id = ?";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, newStatus);
             stmt.setInt(2, roomId);
-
-            LOGGER.info("Executing update for room ID: " + roomId + " with new status: " + newStatus);
 
             int rowsUpdated = stmt.executeUpdate();
             if (rowsUpdated > 0) {
@@ -57,8 +54,6 @@ public class RoomDAO {
             throw e;
         }
     }
-
-
 
     // Get room by ID
     public Room getRoomById(int roomId) throws SQLException {

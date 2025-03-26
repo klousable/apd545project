@@ -27,7 +27,7 @@ public class ReservationDAO {
         this.connection = DatabaseAccess.getConnection();
     }
 
-    public void createReservation(Reservation reservation, List<Integer> roomIds) throws SQLException {
+    public void createReservation(Reservation reservation) throws SQLException {
         String reservationSql = "INSERT INTO reservations (guest_id, check_in_date, check_out_date, number_of_guests, status) " +
                 "VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(reservationSql, Statement.RETURN_GENERATED_KEYS)) {
@@ -42,6 +42,9 @@ public class ReservationDAO {
 
             if (generatedKeys.next()) {
                 int reservationId = generatedKeys.getInt(1);
+                // Get the list of room IDs directly from the reservation object
+                List<Integer> roomIds = reservation.getRoomIds();
+
                 // Now link rooms using ReservationRoomsDAO
                 for (int roomId : roomIds) {
                     reservationRoomsDAO.addRoomToReservation(reservationId, roomId);
@@ -49,6 +52,7 @@ public class ReservationDAO {
             }
         }
     }
+
 
     // Cancel a reservation and update room status to AVAILABLE
     public void cancelReservation(int reservationID) throws SQLException {
@@ -74,8 +78,12 @@ public class ReservationDAO {
         }
     }
 
-    // Update a reservation
-    public void updateReservation(Reservation reservation, List<Integer> newRoomIds) throws SQLException {
+    public void updateReservation(Reservation reservation) throws SQLException {
+
+        Reservation oldReservation = getReservationById(reservation.getReservationID());
+        List<Integer> oldRoomIds = oldReservation.getRoomIds();
+        List<Integer> newRoomIds = reservation.getRoomIds();
+
         // Update the reservation itself
         String reservationSql = "UPDATE reservations SET check_in_date = ?, check_out_date = ?, number_of_guests = ?, status = ? WHERE reservation_id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(reservationSql)) {
@@ -88,26 +96,26 @@ public class ReservationDAO {
             // Update the reservation record
             stmt.executeUpdate();
 
-            // Get the current room IDs associated with this reservation
-            List<Integer> currentRoomIds = getRoomIdsForReservation(reservation.getReservationID());
-
             // Remove rooms no longer associated with the reservation
-            for (int currentRoomId : currentRoomIds) {
-                if (!newRoomIds.contains(currentRoomId)) {
+            for (int oldRoomId: oldRoomIds) {
+                if (!newRoomIds.contains(oldRoomId)) {
                     // Remove the room from the reservation_rooms table
-                    reservationRoomsDAO.removeRoomFromReservation(reservation.getReservationID(), currentRoomId);
+                    reservationRoomsDAO.removeRoomFromReservation(reservation.getReservationID(), oldRoomId);
+                    // Update the room's availability to "AVAILABLE"
                 }
             }
 
             // Add new rooms to the reservation and set them as OCCUPIED
             for (int newRoomId : newRoomIds) {
-                if (!currentRoomIds.contains(newRoomId)) {
+                if (!oldRoomIds.contains(newRoomId)) {
                     // Add the room to the reservation_rooms table
                     reservationRoomsDAO.addRoomToReservation(reservation.getReservationID(), newRoomId);
                 }
             }
         }
     }
+
+
 
     // Confirm a reservation for creation
     public void confirmReservation(int reservationID) throws SQLException {

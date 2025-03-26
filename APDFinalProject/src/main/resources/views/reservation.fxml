@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="689.0" prefWidth="934.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="apdfinalproject.controllers.ReservationController">
+<AnchorPane prefHeight="689.0" prefWidth="934.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="apdfinalproject.controllers.ReservationController">
     <padding>
         <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
     </padding>
@@ -16,7 +28,7 @@
                <children>
                   <VBox layoutX="102.0" layoutY="-47.0" prefHeight="705.0" prefWidth="353.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <Label alignment="CENTER" prefHeight="73.0" prefWidth="353.0" text="Add Reservation" textAlignment="CENTER">
+                        <Label fx:id="reservationTitle" alignment="CENTER" prefHeight="73.0" prefWidth="353.0" text="Add Reservation" textAlignment="CENTER">
                            <font>
                               <Font name="System Bold" size="18.0" />
                            </font>
@@ -24,7 +36,7 @@
                               <Insets top="5.0" />
                            </VBox.margin>
                         </Label>
-                        <GridPane hgap="10.0" prefHeight="247.0" prefWidth="333.0" vgap="5.0">
+                        <GridPane hgap="10.0" prefHeight="307.0" prefWidth="358.0" vgap="5.0">
                            <columnConstraints>
                               <ColumnConstraints hgrow="SOMETIMES" maxWidth="195.0" minWidth="10.0" prefWidth="93.0" />
                               <ColumnConstraints hgrow="SOMETIMES" maxWidth="509.0" minWidth="10.0" prefWidth="230.0" />
@@ -35,6 +47,9 @@
                               <RowConstraints maxHeight="215.0" minHeight="3.0" prefHeight="31.0" vgrow="SOMETIMES" />
                               <RowConstraints maxHeight="215.0" minHeight="6.0" prefHeight="40.0" vgrow="SOMETIMES" />
                               <RowConstraints maxHeight="245.0" minHeight="0.0" prefHeight="37.0" vgrow="SOMETIMES" />
+                              <RowConstraints maxHeight="245.0" minHeight="10.0" prefHeight="26.0" vgrow="SOMETIMES" />
+                              <RowConstraints maxHeight="434.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints maxHeight="434.0" minHeight="10.0" prefHeight="28.0" vgrow="SOMETIMES" />
                               <RowConstraints maxHeight="434.0" minHeight="0.0" prefHeight="55.0" vgrow="SOMETIMES" />
                            </rowConstraints>
                            <children>
@@ -51,32 +66,45 @@
                                  </GridPane.margin>
                               </TextField>
                               <Label alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="131.0" text="Booking ID:" />
-                              <Label fx:id="numRoomsField" prefHeight="17.0" prefWidth="456.0" text="..." GridPane.columnIndex="1" GridPane.rowIndex="4">
+                              <Label fx:id="numRoomsField" prefHeight="17.0" prefWidth="456.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
                                  <GridPane.margin>
                                     <Insets />
                                  </GridPane.margin>
                               </Label>
-                              <Button fx:id="addGuestDetailsButton" disable="true" mnemonicParsing="false" onAction="#handleAddGuestAction" prefHeight="25.0" prefWidth="254.0" text="Add Guest Details" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                              <Label alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="145.0" text="Guest Info:" textAlignment="RIGHT" GridPane.rowIndex="5" />
+                              <Button fx:id="addGuestDetailsButton" disable="true" mnemonicParsing="false" onAction="#handleAddGuestAction" prefHeight="25.0" prefWidth="254.0" text="Add Guest Details" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+                              <Label alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="145.0" text="Guest Info:" textAlignment="RIGHT" GridPane.rowIndex="8" />
                               <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" prefHeight="17.0" prefWidth="170.0" text="Check-in Date:" GridPane.rowIndex="2" />
                               <Label alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="105.0" text="Check-out Date:" GridPane.rowIndex="3" />
                               <DatePicker fx:id="checkInDateField" prefHeight="25.0" prefWidth="269.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                               <DatePicker fx:id="checkOutDateField" prefHeight="25.0" prefWidth="260.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                              <Label alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="107.0" text="Subtotal:" GridPane.rowIndex="5" />
+                              <Label fx:id="reservationSubtotalField" prefHeight="17.0" prefWidth="445.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                              <Label alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="105.0" text="Tax:" textAlignment="RIGHT" GridPane.rowIndex="6" />
+                              <Label fx:id="reservationTaxField" prefHeight="17.0" prefWidth="267.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                              <Label alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="113.0" text="Total:" GridPane.rowIndex="7" />
+                              <Label fx:id="reservationTotalField" prefHeight="17.0" prefWidth="260.0" GridPane.columnIndex="1" GridPane.rowIndex="7" />
                            </children>
                            <padding>
                               <Insets left="10.0" right="15.0" />
                            </padding>
                         </GridPane>
-                        <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
+                        <HBox alignment="TOP_CENTER" prefHeight="52.0" prefWidth="333.0" spacing="5.0">
                            <children>
-                              <Button fx:id="clearButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="131.0" text="Clear" />
-                              <Button fx:id="saveButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="130.0" text="Save" />
-                              <Button fx:id="cancelButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="120.0" text="Cancel" />
+                              <Button fx:id="clearButton" mnemonicParsing="false" onAction="#handleClearAction" prefHeight="25.0" prefWidth="131.0" text="Clear" />
+                              <Button fx:id="saveButton" mnemonicParsing="false" onAction="#handleSaveAction" prefHeight="25.0" prefWidth="130.0" text="Save" />
+                              <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#handleCancelAction" prefHeight="25.0" prefWidth="120.0" text="Cancel" />
                            </children>
                            <VBox.margin>
                               <Insets left="15.0" right="10.0" />
                            </VBox.margin>
                         </HBox>
+                        <VBox prefHeight="212.0" prefWidth="358.0">
+                           <children>
+                              <Label fx:id="validationErrorLabel" alignment="TOP_CENTER" contentDisplay="CENTER" prefHeight="232.0" prefWidth="358.0" text="Errors for creating reservation" textAlignment="CENTER" visible="false" wrapText="true">
+                                 <VBox.margin>
+                                    <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                                 </VBox.margin></Label>
+                           </children></VBox>
                      </children>
                   </VBox>
                </children></AnchorPane>
@@ -99,8 +127,7 @@
                                  <children>
                                     <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0" GridPane.rowIndex="3">
                                        <children>
-                                          <Button fx:id="addAvailableRoomButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="168.0" text="Add Room" />
-                                          <Button fx:id="removeAvailableRoomsButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="157.0" text="Remove" />
+                                          <Button fx:id="addAvailableRoomButton" mnemonicParsing="false" onAction="#handleAddAvailableRoomAction" prefHeight="25.0" prefWidth="168.0" text="Add Room" />
                                        </children>
                                     </HBox>
                                     <HBox prefHeight="100.0" prefWidth="200.0">
@@ -110,18 +137,18 @@
                                                 <Font name="System Bold" size="14.0" />
                                              </font>
                                           </Label>
-                                          <Button fx:id="roomRulesButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleViewRoomRules" prefHeight="25.0" prefWidth="206.0" text="View Room Rules">
+                                          <Button fx:id="roomRulesButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleViewRoomRulesAction" prefHeight="25.0" prefWidth="206.0" text="View Room Rules">
                                              <HBox.margin>
                                                 <Insets right="10.0" top="5.0" />
                                              </HBox.margin>
                                           </Button>
                                        </children>
                                     </HBox>
-                                    <Label fx:id="recommendedRoomsLabel" alignment="CENTER" prefHeight="17.0" prefWidth="554.0" text="The recommended number of rooms: ..." textAlignment="CENTER" GridPane.rowIndex="2">
+                                    <Label fx:id="recommendedRoomsLabel" alignment="CENTER" prefHeight="17.0" prefWidth="554.0" text="The recommended number of rooms: ..." textAlignment="CENTER" wrapText="true" GridPane.rowIndex="2">
                                        <GridPane.margin>
                                           <Insets top="2.0" />
                                        </GridPane.margin></Label>
-                                    <TableView fx:id="availableRoomsTable11" prefHeight="228.0" prefWidth="498.0" GridPane.rowIndex="1">
+                                    <TableView fx:id="availableRoomsTableView" prefHeight="228.0" prefWidth="498.0" GridPane.rowIndex="1">
                                        <columns>
                                           <TableColumn fx:id="availableRoomIdColumn" prefWidth="125.0" text="Room ID" />
                                           <TableColumn fx:id="availableRoomTypeColumn" prefWidth="111.0" text="Room Type" />
@@ -148,8 +175,8 @@
                                  <children>
                                     <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0" GridPane.rowIndex="3">
                                        <children>
-                                          <Button fx:id="removeSelectedRoom" mnemonicParsing="false" prefHeight="25.0" prefWidth="176.0" text="Remove Selected Room" />
-                                          <Button fx:id="clearSelectedRooms" mnemonicParsing="false" prefHeight="25.0" prefWidth="155.0" text="Clear All" />
+                                          <Button fx:id="removeSelectedRoomButton" mnemonicParsing="false" onAction="#handleRemoveSelectedRoomAction" prefHeight="25.0" prefWidth="176.0" text="Remove Selected Room" />
+                                          <Button fx:id="clearSelectedRoomsButton" mnemonicParsing="false" onAction="#handleClearSelectedRoomAction" prefHeight="25.0" prefWidth="155.0" text="Clear All" />
                                        </children>
                                     </HBox>
                                     <HBox prefHeight="100.0" prefWidth="200.0">
@@ -161,11 +188,11 @@
                                           </Label>
                                        </children>
                                     </HBox>
-                                    <Label fx:id="selectedRoomErrors" alignment="CENTER" prefHeight="17.0" prefWidth="675.0" text="Error messaging for room selection..." textAlignment="CENTER" visible="false" GridPane.rowIndex="2">
+                                    <Label fx:id="selectedRoomErrorLabel" alignment="CENTER" prefHeight="17.0" prefWidth="675.0" text="Error messaging for room selection..." textAlignment="CENTER" visible="false" wrapText="true" GridPane.rowIndex="2">
                                        <GridPane.margin>
                                           <Insets top="2.0" />
                                        </GridPane.margin></Label>
-                                    <TableView fx:id="availableRoomsTable1" prefHeight="318.0" prefWidth="323.0" GridPane.rowIndex="1">
+                                    <TableView fx:id="selectedRoomsTableView" prefHeight="318.0" prefWidth="323.0" GridPane.rowIndex="1">
                                        <columns>
                                           <TableColumn fx:id="selectedRoomIdColumn" prefWidth="125.0" text="Room ID" />
                                           <TableColumn fx:id="selectedRoomTypeColumn" prefWidth="111.0" text="Room Type" />
@@ -173,6 +200,7 @@
                                           <TableColumn fx:id="selectedRoomPriceField" minWidth="8.0" prefWidth="135.0" text="Price" />
                                        </columns>
                                     </TableView>
+                                    <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
                                  </children>
                               </GridPane>
                            </children></AnchorPane>

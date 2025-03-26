@@ -24,8 +24,10 @@ import javafx.beans.value.ObservableValue;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 
 public class ReservationController {
@@ -322,7 +324,7 @@ public class ReservationController {
     }
 
     @FXML
-    private void validateReservationFields() {
+    private boolean validateReservationFields() {
         boolean isValid = true;
         StringBuilder errorMessage = new StringBuilder();
 
@@ -407,6 +409,8 @@ public class ReservationController {
             validationErrorLabel.setText(errorMessage.toString());
             addGuestDetailsButton.setDisable(true);  // Disable the button
         }
+
+        return isValid;
     }
 
     @FXML
@@ -475,7 +479,47 @@ public class ReservationController {
     }
 
     @FXML
-    private void handleSaveAction(ActionEvent actionEvent) {
+    private void handleSaveAction(ActionEvent actionEvent) throws SQLException {
+        showAlert("Confirmation", "Are you sure you want to submit this reservation? Modification or cancellation can only be done through the front desk.", Alert.AlertType.CONFIRMATION, () -> {
+            boolean valid = validateReservationFields();
+
+            if (valid) {
+                int reservationId = Integer.parseInt(reservationIdField.getText());
+                List<Integer> roomIds = selectedRoomsTableView.getItems().stream()
+                        .map(Room::getRoomID)
+                        .collect(Collectors.toList());
+
+                LocalDate checkInDate = checkInDateField.getValue();
+                LocalDate checkOutDate = checkOutDateField.getValue();
+                int numGuests = Integer.parseInt(numberGuestsField.getText());
+
+                // Safe to do since the save button is only open if this.guest is not null
+                int guestId = this.guest.get().getGuestId();
+
+                Reservation reservation = new Reservation(
+                        reservationId, guestId, checkInDate,checkOutDate,
+                        numGuests, "CONFIRMED", roomIds);
+
+                // Check if this reservation exists in the database
+                Reservation existingReservation = null;
+
+                try {
+                    existingReservation = reservationDAO.getReservationById(reservationId);
+                    if (existingReservation != null) {
+                        guestDAO.updateGuest(this.getGuest());
+                        // Update the reservation object in the database
+                        // Update the Guest object in the database
+                    } else {
+                        reservationDAO.createReservation(reservation);
+                        guestDAO.createGuest(this.getGuest());
+                    }
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                    // Use logger to capture error
+                }
+            }
+        });
+
     }
 
     @FXML

@@ -48,7 +48,7 @@
                     </GridPane.margin></TextField>
                 <HBox alignment="TOP_CENTER" prefHeight="112.0" prefWidth="332.0" spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
                     <children>
-                        <Button fx:id="clearButton" alignment="BOTTOM_CENTER" mnemonicParsing="false" prefHeight="25.0" prefWidth="176.0" text="Clear" />
+                        <Button fx:id="clearButton" alignment="BOTTOM_CENTER" mnemonicParsing="false" onAction="#handleClearAction" prefHeight="25.0" prefWidth="176.0" text="Clear" />
                         <Button fx:id="saveButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="169.0" text="Save" />
                         <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#handleCancelAction" prefHeight="25.0" prefWidth="197.0" text="Exit" />
                     </children>

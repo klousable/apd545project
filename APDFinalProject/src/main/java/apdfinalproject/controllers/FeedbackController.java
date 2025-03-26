@@ -1,8 +1,10 @@
 package apdfinalproject.controllers;
 
+import apdfinalproject.dao.ReservationDAO;
 import apdfinalproject.database.DatabaseAccess;
 import apdfinalproject.models.Admin;
 import apdfinalproject.models.Kiosk;
+import apdfinalproject.models.Reservation;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -16,6 +18,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class FeedbackController {
+
+    private FeedbackDAO feedbackDAO;
+    private ReservationDAO reservationDAO;
+    private int selectedReservationId;
+    private static final Logger LOGGER = DatabaseAccess.LOGGER;
+    private Admin admin;
+    private Kiosk kiosk;
 
     @FXML
     private Label feedbackTitle;
@@ -36,11 +45,10 @@ public class FeedbackController {
     @FXML
     private Button cancelButton;
 
-    private FeedbackDAO feedbackDAO;
-    private int selectedReservationId;
-    private static final Logger LOGGER = DatabaseAccess.LOGGER;
-    private Admin admin;
-    private Kiosk kiosk;
+    public FeedbackController() throws SQLException {
+        this.reservationDAO = new ReservationDAO();
+        this.feedbackDAO = new FeedbackDAO();
+    }
 
     @FXML
     public void initialize() throws SQLException {
@@ -54,14 +62,18 @@ public class FeedbackController {
         feedbackIdField.setText(String.valueOf(feedbackDAO.getNextFeedbackId()));
 
         Platform.runLater(() -> {
-            if (selectedReservationId != 0) {
+            if (selectedReservationId != 0 && this.admin != null) {
                 try {
                     loadFeedbackData();
                 } catch (SQLException e) {
-                    LOGGER.log(Level.SEVERE, "Error loading feedback data", e);
+                    LOGGER.log(Level.SEVERE, "Errors loading feedback data", e);
                 }
-            } else {
-                LOGGER.warning("No Reservation ID selected!");
+            } else if (selectedReservationId != 0 && this.kiosk != null) {
+                try {
+                    loadReservationData();
+                } catch (SQLException e) {
+                    LOGGER.log(Level.SEVERE, "Errors loading reservation data", e);
+                }
             }
         });
     }
@@ -115,9 +127,26 @@ public class FeedbackController {
         feedbackRatingField.setDisable(true);
     }
 
+    private void loadReservationData() throws SQLException {
+        LOGGER.info("Loading reservation data for reservation ID: " + selectedReservationId);
+        Reservation reservation = reservationDAO.getReservationById(selectedReservationId);
+
+        if (reservation != null) {
+            LOGGER.info("Feedback found for reservation ID: " + selectedReservationId);
+            loadReservation(reservation);
+        } else {
+            LOGGER.warning("No feedback found for reservation ID: " + selectedReservationId);
+            feedbackCommentArea.setText("No feedback submitted.");
+        }
+    }
+
+    public void loadReservation(Reservation reservation) {
+        guestIdField.setText(String.valueOf(reservation.getGuestID()));
+        reservationIdField.setText(String.valueOf(reservation.getReservationID()));
+    }
+
     @FXML
     private void handleSaveButton(ActionEvent event) {
-        LOGGER.info("Save button clicked.");
 
         // Get values from the fields
         String comments = feedbackCommentArea.getText();
@@ -142,7 +171,7 @@ public class FeedbackController {
 
     // Handle the clear button click event
     @FXML
-    private void handleClearButton(ActionEvent event) {
+    private void handleClearAction(ActionEvent event) {
         // Clear fields
         reservationIdField.clear();
         feedbackIdField.clear();
@@ -154,9 +183,12 @@ public class FeedbackController {
     // Handle the cancel button click event
     @FXML
     private void handleCancelAction(ActionEvent actionEvent) {
+
         // Only show a warning message if a guest is leaving the kiosk
         if (kiosk != null) {
             showAlert("Exit Confirmation", "Are you sure you want to exit? Any unsaved data will be lost.", Alert.AlertType.CONFIRMATION, () -> {
+                // Reset selected reservation
+                this.selectedReservationId = 0;
                 Stage currentStage = (Stage) cancelButton.getScene().getWindow();
                 currentStage.close();
             });

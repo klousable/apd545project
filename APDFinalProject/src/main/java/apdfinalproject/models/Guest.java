@@ -11,7 +11,6 @@ public class Guest {
     private final StringProperty phoneNumber;
     private final StringProperty email;
     private final StringProperty address;
-    private final StringProperty feedback;
 
     // Constructors
     public Guest(int guestId, String name, String phoneNumber, String email, String address) {
@@ -20,7 +19,6 @@ public class Guest {
         this.phoneNumber = new SimpleStringProperty(phoneNumber);
         this.email = new SimpleStringProperty(email);
         this.address = new SimpleStringProperty(address);
-        this.feedback = new SimpleStringProperty(null);
     }
 
     public IntegerProperty guestIdProperty() {
@@ -41,10 +39,6 @@ public class Guest {
 
     public StringProperty addressProperty() {
         return address;
-    }
-
-    public StringProperty feedbackProperty() {
-        return feedback;
     }
 
     public int getGuestId() {
@@ -87,14 +81,6 @@ public class Guest {
         this.address.set(address);
     }
 
-    public String getFeedback() {
-        return feedback.get();
-    }
-
-    public void setFeedback(String feedback) {
-        this.feedback.set(feedback);
-    }
-
     public void getGuestDetails() {
     }
 
@@ -103,9 +89,5 @@ public class Guest {
         setPhoneNumber(phoneNumber);
         setEmail(email);
         setAddress(address);
-    }
-
-    public boolean validateGuestDetails() {
-        return true;
     }
 }

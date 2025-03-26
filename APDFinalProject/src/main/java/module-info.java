@@ -11,6 +11,7 @@ module apdfinalproject {
 
     exports apdfinalproject.models;
     exports apdfinalproject.dao;
+    exports apdfinalproject.dto;
 
     exports apdfinalproject.controllers;
     opens apdfinalproject.controllers to javafx.fxml;

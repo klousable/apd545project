@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="480.0" prefWidth="528.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="apdfinalproject.controllers.GuestSearchController">
+<AnchorPane prefHeight="483.0" prefWidth="589.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="apdfinalproject.controllers.GuestSearchController">
    <children>
       <GridPane prefHeight="410.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <columnConstraints>
@@ -35,7 +35,7 @@
                         <Font name="System Bold" size="16.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="bookingSearch" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="336.0" promptText="Search by Booking ID...">
+                  <TextField fx:id="bookingSearch" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="336.0" promptText="Search by Booking or Guest ID......">
                      <HBox.margin>
                         <Insets right="5.0" top="10.0" />
                      </HBox.margin>

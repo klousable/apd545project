@@ -43,7 +43,7 @@ public class GuestDAO {
 
     // Method to add a new guest to the database
     public void createGuest(Guest guest) throws SQLException {
-        String sql = "INSERT INTO guests (name, phone_number, email, address) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO guests (name, phone_number, email, address) VALUES (?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, guest.getName());
             stmt.setString(2, guest.getPhoneNumber());
@@ -64,6 +64,25 @@ public class GuestDAO {
             }
         }
         return null; // Return null if no guest found with that ID
+    }
+
+    // Get guest by phone number
+    public Guest getGuestByPhoneNumber(String phoneNumber) throws SQLException {
+        Guest guest = null;
+        String sql = "SELECT * FROM guests WHERE phone_number = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, phoneNumber);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                int guestId = rs.getInt("guest_id");
+                String guestName = rs.getString("name");
+                String guestPhoneNumber = rs.getString("phone_number");
+                String guestEmail = rs.getString("email");
+                String guestAddress = rs.getString("address");
+                guest = new Guest(guestId, guestName, guestPhoneNumber, guestEmail, guestAddress);
+            }
+        }
+        return guest;
     }
 
     public Guest getGuestByReservationId(int reservationId) throws SQLException {

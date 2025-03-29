@@ -13,6 +13,7 @@ import javafx.beans.binding.Bindings;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -44,9 +45,9 @@ import java.sql.SQLException;
 
 public class GuestSearchController {
 
-    private ReservationDAO reservationDAO;
+    private final ReservationDAO reservationDAO;
     private Kiosk kiosk;
-    private Logger LOGGER = DatabaseAccess.LOGGER;
+    private final Logger LOGGER = DatabaseAccess.LOGGER;
 
     // FXML UI components
     @FXML
@@ -115,7 +116,6 @@ public class GuestSearchController {
         }
     }
 
-
     public void handleSelectBookingAction(ActionEvent actionEvent) {
         Reservation selectedReservation = reservationTableView.getSelectionModel().getSelectedItem();
 
@@ -135,13 +135,30 @@ public class GuestSearchController {
             // Set kiosk for logging purposes
             feedbackController.setKiosk(kiosk);
 
+            // Get the current main stage
+            Stage mainStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+
+            // Dim the main window
+            mainStage.setOpacity(0.5);
+
             // Create a new stage and set the scene
             Stage feedbackStage = new Stage();
             feedbackStage.setTitle("Billing Details");
             feedbackStage.initModality(Modality.APPLICATION_MODAL);
-            feedbackStage.setScene(new Scene(root));  // Only set the scene once here
+            feedbackStage.initOwner(mainStage);
+            feedbackStage.setScene(new Scene(root));
 
-            feedbackStage.show();
+            // Restore main window when feedback form closes
+            feedbackStage.setOnCloseRequest(event -> {
+                mainStage.setOpacity(1.0);
+                mainStage.toFront();
+            });
+
+            feedbackStage.showAndWait();
+
+            // Ensure the main window is fully restored
+            mainStage.setOpacity(1.0);
+            mainStage.toFront();
 
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, "Failed to load feedback.fxml", e);
@@ -152,9 +169,20 @@ public class GuestSearchController {
     @FXML
     private void handleCancelAction(ActionEvent actionEvent) {
         showAlert("Exit Confirmation", "Are you sure you want to exit? Any unsaved data will be lost.", Alert.AlertType.CONFIRMATION, () -> {
-            Stage currentStage = (Stage) cancelButton.getScene().getWindow();
-            currentStage.close();
+           close();
         });
+    }
+    private void close() {
+        // Close the current window
+        Stage currentStage = (Stage) cancelButton.getScene().getWindow();
+        currentStage.close();
+
+        // Explicitly restore the main window (opacity and bring to front)
+        Stage mainStage = (Stage) currentStage.getOwner();
+        if (mainStage != null) {
+            mainStage.setOpacity(1.0);  // Restore the opacity to normal
+            mainStage.toFront();  // Bring the main window to the front
+        }
     }
 
     private void showAlert(String title, String message, Alert.AlertType type) {

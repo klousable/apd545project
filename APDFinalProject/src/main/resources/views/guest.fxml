@@ -7,7 +7,8 @@
 
 <AnchorPane prefHeight="487.0" prefWidth="451.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="apdfinalproject.controllers.GuestController">
     <children>
-        <GridPane hgap="5.0" layoutX="30.0" layoutY="30.0" prefHeight="412.0" prefWidth="377.0" vgap="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <GridPane alignment="CENTER" hgap="10.0" vgap="10.0" layoutX="30.0" layoutY="30.0" prefHeight="412.0" prefWidth="377.0"
+                  AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0">
             <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="195.0" minWidth="10.0" prefWidth="92.0" />
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="509.0" minWidth="10.0" prefWidth="243.0" />
@@ -16,11 +17,13 @@
             <rowConstraints>
                 <RowConstraints maxHeight="167.0" minHeight="6.0" prefHeight="99.0" vgrow="SOMETIMES" />
                 <RowConstraints maxHeight="179.0" minHeight="0.0" prefHeight="39.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="215.0" minHeight="0.0" prefHeight="44.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="215.0" minHeight="0.0" prefHeight="36.0" vgrow="SOMETIMES" />
                 <RowConstraints maxHeight="245.0" minHeight="0.0" prefHeight="38.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="365.0" minHeight="7.0" prefHeight="42.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="411.0" minHeight="10.0" prefHeight="41.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="434.0" minHeight="0.0" prefHeight="121.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="365.0" minHeight="10.0" prefHeight="46.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="365.0" minHeight="6.0" prefHeight="27.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="411.0" minHeight="10.0" prefHeight="37.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="434.0" minHeight="0.0" prefHeight="49.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="434.0" minHeight="10.0" prefHeight="76.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
                 <Label fx:id="guestTitle" alignment="CENTER" prefHeight="58.0" prefWidth="364.0" text="Add Guest" GridPane.columnIndex="1">
@@ -30,19 +33,19 @@
                 </Label>
                 <Label alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="131.0" text="Name:" textAlignment="RIGHT" GridPane.rowIndex="2" />
                 <Label alignment="CENTER_RIGHT" prefHeight="20.0" prefWidth="107.0" text="Phone Number:" textAlignment="RIGHT" GridPane.rowIndex="3" />
-                <Label alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="169.0" text="Email:" GridPane.rowIndex="4" />
-                <Label alignment="CENTER_RIGHT" contentDisplay="TOP" prefHeight="10.0" prefWidth="107.0" text="Address:" textAlignment="RIGHT" GridPane.rowIndex="5" />
+                <Label alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="169.0" text="Email:" GridPane.rowIndex="5" />
+                <Label alignment="CENTER_RIGHT" contentDisplay="TOP" prefHeight="10.0" prefWidth="107.0" text="Address:" textAlignment="RIGHT" GridPane.rowIndex="6" />
                 <TextField fx:id="guestNameField" GridPane.columnIndex="1" GridPane.rowIndex="2">
                     <GridPane.margin>
                         <Insets left="10.0" />
                     </GridPane.margin>
                 </TextField>
-                <TextField fx:id="guestEmailField" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                <TextField fx:id="guestEmailField" GridPane.columnIndex="1" GridPane.rowIndex="5">
                     <GridPane.margin>
                         <Insets left="10.0" />
                     </GridPane.margin>
                 </TextField>
-                <TextField fx:id="guestAddressField" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                <TextField fx:id="guestAddressField" GridPane.columnIndex="1" GridPane.rowIndex="6">
                     <GridPane.margin>
                         <Insets left="10.0" />
                     </GridPane.margin>
@@ -58,7 +61,7 @@
                         <Insets left="10.0" />
                     </GridPane.margin>
                 </TextField>
-            <HBox prefHeight="122.0" prefWidth="242.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
+            <HBox prefHeight="42.0" prefWidth="242.0" GridPane.columnIndex="1" GridPane.rowIndex="7">
                <children>
                   <Button fx:id="clearButton" mnemonicParsing="false" onAction="#handleClearAction" prefHeight="25.0" prefWidth="102.0" text="Clear">
                      <HBox.margin>
@@ -76,6 +79,11 @@
                   <Insets top="15.0" />
                </GridPane.margin>
             </HBox>
+            <Label fx:id="phoneNumberSearchLabel" alignment="TOP_LEFT" prefHeight="42.0" prefWidth="250.0" text="*Search existing guest info by hitting ENTER in the Phone Number field" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="4">
+               <font>
+                  <Font size="11.0" />
+               </font>
+            </Label>
             </children>
         </GridPane>
     </children>

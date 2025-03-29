@@ -79,10 +79,10 @@ public class DatabaseAccess {
                     "CREATE TABLE guests (" +
                             "guest_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                             "name TEXT NOT NULL, " +
-                            "phone_number TEXT, " +
-                            "email TEXT UNIQUE NOT NULL, " +
+                            "phone_number TEXT UNIQUE NOT NULL, " +
+                            "email TEXT NOT NULL, " +
                             "address TEXT, " +
-                            "feedback_id INTEGER, " +
+                            "feedback_id INTEGER NULL, " +
                             "FOREIGN KEY (feedback_id) REFERENCES feedback(feedback_id))");
 
             statement.execute(
@@ -153,9 +153,18 @@ public class DatabaseAccess {
             LOGGER.info("Inserting initial data...");
 
             statement.execute(
-                    "INSERT INTO guests (name, phone_number, email, address) VALUES " +
-                        "('John Doe', '123-456-7890', 'john.doe@example.com', '123 Main St, Cityville, CV'), " +
-                        "('Jane Smith', '987-654-3210', 'jane.smith@example.com', '456 Oak St, Townsville, TS')");
+                    "INSERT INTO guests (name, phone_number, email, address, feedback_id) VALUES " +
+                            "('John Doe', '123-456-7890', 'john.doe@example.com', '123 Main St, Cityville, CV', 1), " +
+                            "('Jane Smith', '987-654-3210', 'jane.smith@example.com', '456 Oak St, Townsville, TS', 2), " +
+                            "('Alice Johnson', '555-123-4567', 'alice.johnson@example.com', '789 Pine St, Hamlet, HM', 3), " +
+                            "('Bob Williams', '444-987-6543', 'bob.williams@example.com', '321 Maple Ave, Villageton, VT', 4), " +
+                            "('Charlie Brown', '333-222-1111', 'charlie.brown@example.com', '159 Cedar Rd, Metropolis, MP', 5), " +
+                            "('Diana Prince', '777-888-9999', 'diana.prince@example.com', '753 Elm St, Gotham, GT', 6), " +
+                            "('Ethan Hunt', '111-222-3333', 'ethan.hunt@example.com', '951 Birch St, Springfield, SP', 7), " +
+                            "('Fiona Gallagher', '666-555-4444', 'fiona.gallagher@example.com', '357 Oakwood Dr, Shadyside, SS', 8), " +
+                            "('George Lucas', '999-000-1111', 'george.lucas@example.com', '852 Redwood Blvd, Starcity, SC', 9), " +
+                            "('Hannah Baker', '222-333-4444', 'hannah.baker@example.com', '159 Sycamore Ln, Crestwood, CW', 10);"
+            );
 
             statement.execute("INSERT INTO room_types (type_name) VALUES " +
                                 "('SINGLE'), ('DOUBLE'), ('DELUXE'), ('PENTHOUSE')");
@@ -164,11 +173,24 @@ public class DatabaseAccess {
                     "('SINGLE', 1, 110.00, 'OCCUPIED'), " +
                     "('SINGLE', 1, 120.00, 'OCCUPIED'), " +
                     "('DOUBLE', 2, 160.00, 'OCCUPIED'), " +
+                    "('SINGLE', 1, 130.00, 'AVAILABLE'), " +
+                    "('SINGLE', 1, 140.00, 'AVAILABLE'), " +
+                    "('SINGLE', 1, 150.00, 'AVAILABLE'), " +
+                    "('DOUBLE', 2, 200.00, 'AVAILABLE'), " +
+                    "('DOUBLE', 2, 190.00, 'AVAILABLE'), " +
+                    "('DOUBLE', 2, 185.00, 'AVAILABLE'), " +
                     "('DOUBLE', 2, 175.00, 'AVAILABLE'), " +
                     "('DELUXE', 2, 250.00, 'AVAILABLE'), " +
                     "('DELUXE', 2, 280.00, 'AVAILABLE'), " +
+                    "('DELUXE', 2, 290.00, 'AVAILABLE'), " +
+                    "('DELUXE', 2, 300.00, 'AVAILABLE'), " +
+                    "('DELUXE', 2, 350.00, 'AVAILABLE'), " +
+                    "('PENTHOUSE', 2, 500.00, 'AVAILABLE'), " +
                     "('PENTHOUSE', 2, 600.00, 'AVAILABLE'), " +
-                    "('PENTHOUSE', 2, 650.00, 'AVAILABLE')");
+                    "('PENTHOUSE', 2, 700.00, 'AVAILABLE'), " +
+                    "('PENTHOUSE', 2, 800.00, 'AVAILABLE'), " +
+                    "('PENTHOUSE', 2, 900.00, 'AVAILABLE'), " +
+                    "('PENTHOUSE', 2, 1000.00, 'AVAILABLE')");
 
             statement.execute("INSERT INTO reservations (guest_id, check_in_date, check_out_date, number_of_guests, status) VALUES " +
                                 "(1, '2025-03-21', '2025-03-25', 2, 'CONFIRMED'), " +

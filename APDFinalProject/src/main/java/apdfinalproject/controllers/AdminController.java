@@ -35,13 +35,13 @@ public class AdminController {
     private Button cancelButton;
 
     public AdminController() throws SQLException {
-        adminDAO = new AdminDAO(); // Initialize the DAO
+        adminDAO = new AdminDAO();
     }
 
     public void setKioskStage(Stage kioskStage) {
         this.kioskStage = kioskStage;
     }
-    // Initialize method for setting up event listeners
+
     @FXML
     public void initialize() {
     }
@@ -105,20 +105,20 @@ public class AdminController {
 
     @FXML
     private void handleCancelLogin() {
-        // Create a confirmation alert
-        Alert alert = new Alert(AlertType.CONFIRMATION);
-        alert.setTitle("Cancel Login");
-        alert.setHeaderText("Are you sure you want to cancel the login?");
-        alert.setContentText("Any unsaved data will be lost.");
+        close();
+    }
 
-        // Show the confirmation and wait for the user's response
-        alert.showAndWait().ifPresent(response -> {
-            if (response == ButtonType.OK) {
-                // Close the current window if the user confirms
-                Stage currentStage = (Stage) cancelButton.getScene().getWindow();
-                currentStage.close();
-            }
-        });
+    private void close() {
+        // Close the current window
+        Stage currentStage = (Stage) cancelButton.getScene().getWindow();
+        currentStage.close();
+
+        // Explicitly restore the main window (opacity and bring to front)
+        Stage mainStage = (Stage) currentStage.getOwner();
+        if (mainStage != null) {
+            mainStage.setOpacity(1.0);  // Restore the opacity to normal
+            mainStage.toFront();  // Bring the main window to the front
+        }
     }
 
     private void showAlert(String title, String message, AlertType type) {
@@ -130,4 +130,19 @@ public class AdminController {
         // Show the alert and wait for the user's response
         alert.showAndWait();
     }
+
+    private void showAlert(String title, String message, Alert.AlertType type, Runnable onConfirmAction) {
+        // Create and configure the alert
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(message);
+
+        // Show the alert and wait for the user's response
+        alert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK && onConfirmAction != null) {
+                onConfirmAction.run();
+            }
+        });
+    }
+
 }

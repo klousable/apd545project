@@ -13,12 +13,17 @@ import javafx.scene.Scene;
 import javafx.scene.Parent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class KioskController {
 
     private Kiosk kiosk;
-
-    // UI elements
+    private Logger LOGGER = DatabaseAccess.LOGGER;
 
     @FXML
     private Button addReservationButton;
@@ -47,13 +52,23 @@ public class KioskController {
     @FXML
     private ImageView kioskImage;
 
+    public static Stage kioskStage;
+
     public void initialize() {
-        kiosk = new Kiosk(1, "Lobby Area");
-        // Display the welcome message
-        kioskIdMessage.setText(kiosk.displayWelcomeMessage());
-        // Add Stock image for Guests
-        Image image = new Image(getClass().getResource("/images/hotel.jpg").toExternalForm());
-        kioskImageView.setImage(image);
+        try {
+            kiosk = new Kiosk(1, "Lobby Area");
+            // Display the welcome message
+            kioskIdMessage.setText(kiosk.displayWelcomeMessage());
+            // Add Stock image for Guests
+            Image image = new Image(getClass().getResource("/images/hotel.jpg").toExternalForm());
+            kioskImageView.setImage(image);
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error initializing Kiosk: ", e);
+        }
+    }
+
+    public void setKioskStage(Stage stage) {
+        kioskStage = stage;
     }
 
     // "Self-Service Kiosk" button
@@ -77,7 +92,7 @@ public class KioskController {
             // Show the reservation window and wait until it is closed
             reservationStage.showAndWait();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Error opening the reservation menu: ", e);
         }
     }
 
@@ -102,38 +117,52 @@ public class KioskController {
             // Show the guest search window and wait until it is closed
             guestSearchStage.showAndWait();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Error opening the guest search menu: ", e);
         }
     }
 
-    // "Administrator Login" button
     @FXML
     private void handleAdminLoginAction() {
         try {
-            // Load the Admin Login Menu FXML
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/admin-login.fxml"));
             Parent adminLoginRoot = loader.load();
 
-            // Get the Admin Login Controller
+            // Get the controller and pass the kiosk stage
             AdminController adminController = loader.getController();
+            Stage kioskStage = (Stage) adminLoginButton.getScene().getWindow();
 
-            // Create a new stage for the guestSearch form
+            // Show the login window
             Stage adminLoginStage = new Stage();
             adminLoginStage.setTitle("Administrator Login");
-            adminLoginStage.initModality(Modality.APPLICATION_MODAL);
+            adminLoginStage.initModality(Modality.WINDOW_MODAL);
+            adminLoginStage.initOwner(kioskStage);
             adminLoginStage.setScene(new Scene(adminLoginRoot));
-
-            // Show the admin window and wait until it is closed
             adminLoginStage.showAndWait();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Error opening the admin login window: ", e);
         }
     }
 
-    // "Exit" button
     @FXML
     private void handleExitAction() {
-        DatabaseAccess.closeConnection();
-        System.exit(0);
+        showAlert("Exit Confirmation", "Are you sure you want to exit? Any unsaved data will be lost.", AlertType.CONFIRMATION, () -> {
+            DatabaseAccess.closeConnection();
+            System.exit(0);
+        });
     }
+
+    private void showAlert(String title, String message, AlertType type, Runnable onConfirmAction) {
+        // Create and configure the alert
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(message);
+
+        // Show the alert and wait for the user's response
+        alert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK && onConfirmAction != null) {
+                onConfirmAction.run();
+            }
+        });
+    }
+
 }

@@ -1,5 +1,6 @@
 package apdfinalproject.application;
 
+import apdfinalproject.controllers.KioskController;
 import apdfinalproject.database.DatabaseAccess;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -18,16 +19,17 @@ public class HotelApplication extends Application {
     @Override
     public void start(Stage primaryStage) {
         try {
-            // Log the start of the application
+            // Logging application startup
             LOGGER.info("Starting Hotel Reservation System...");
 
-            // Initialize DB connection
+            // Initialize connection to SQLite
             Connection conn = DatabaseAccess.getConnection();
             LOGGER.info("Database connection established.");
 
-            // Load your FXML
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/views/kiosk.fxml")));
             Scene scene = new Scene(root);
+            KioskController.kioskStage = primaryStage;
+
             primaryStage.setTitle("Hotel Reservation System");
             primaryStage.setScene(scene);
             primaryStage.show();
@@ -35,14 +37,14 @@ public class HotelApplication extends Application {
             LOGGER.info("Application UI loaded and displayed.");
 
         } catch (Exception e) {
-            // Log the exception
+            // Log the exception error
             LOGGER.log(Level.SEVERE, "Error initializing the application", e);
         }
     }
 
     @Override
     public void stop() {
-        // Log when the application is stopping
+        // Log application shutdown
         LOGGER.info("Stopping Hotel Reservation System...");
 
         // Close DB on exit

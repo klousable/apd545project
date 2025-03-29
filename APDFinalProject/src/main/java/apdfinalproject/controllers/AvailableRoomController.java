@@ -34,7 +34,15 @@ public class AvailableRoomController {
         roomBedsColumn.setCellValueFactory(new PropertyValueFactory<>("numberOfBeds"));
         roomPriceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
         roomStatusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
+        refreshTable();
+    }
 
+    public void handleExitAction(ActionEvent actionEvent) {
+        Stage currentStage = (Stage) exitButton.getScene().getWindow();
+        currentStage.close();
+    }
+
+    public void refreshTable () {
         try {
             RoomDAO roomDAO = new RoomDAO();
             ObservableList<Room> availableRooms = roomDAO.getAllAvailableRooms();
@@ -42,10 +50,5 @@ public class AvailableRoomController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public void handleExitAction(ActionEvent actionEvent) {
-        Stage currentStage = (Stage) exitButton.getScene().getWindow();
-        currentStage.close();
     }
 }

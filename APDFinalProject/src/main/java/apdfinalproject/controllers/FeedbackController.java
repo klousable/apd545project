@@ -55,7 +55,7 @@ public class FeedbackController {
         LOGGER.info("Initializing FeedbackController...");
 
         feedbackDAO = new FeedbackDAO();
-        saveButton.setDisable(true);
+        saveButton.setDisable(false);
         clearButton.setDisable(false);
         cancelButton.setDisable(false);
         // Assume that we are adding feedback first so load the next feedback ID for view
@@ -132,10 +132,10 @@ public class FeedbackController {
         Reservation reservation = reservationDAO.getReservationById(selectedReservationId);
 
         if (reservation != null) {
-            LOGGER.info("Feedback found for reservation ID: " + selectedReservationId);
+            LOGGER.info("Reservation found for reservation ID: " + selectedReservationId);
             loadReservation(reservation);
         } else {
-            LOGGER.warning("No feedback found for reservation ID: " + selectedReservationId);
+            LOGGER.warning("No reservation found for reservation ID: " + selectedReservationId);
             feedbackCommentArea.setText("No feedback submitted.");
         }
     }
@@ -146,7 +146,7 @@ public class FeedbackController {
     }
 
     @FXML
-    private void handleSaveButton(ActionEvent event) {
+    private void handleSaveAction(ActionEvent event) {
 
         // Get values from the fields
         String comments = feedbackCommentArea.getText();
@@ -162,7 +162,9 @@ public class FeedbackController {
             LOGGER.info("Saving feedback for reservation ID: " + reservationId);
             // Save feedback using DAO
             feedbackDAO.createFeedback(feedback);
-            LOGGER.info("Feedback saved successfully from Kiosk: " + kiosk.getKioskID() + "at Location: " + kiosk.getLocation());
+            LOGGER.info("Feedback saved successfully from Kiosk: " + kiosk.getKioskID() + " at Location: " + kiosk.getLocation());
+            showAlert("Feedback Saved", "Feedback successfully saved for Reservation ID: " + reservationId, Alert.AlertType.INFORMATION);
+            close();
         } catch (SQLException e) {
             LOGGER.severe("Error saving feedback: " + e.getMessage());
             e.printStackTrace();
@@ -189,14 +191,32 @@ public class FeedbackController {
             showAlert("Exit Confirmation", "Are you sure you want to exit? Any unsaved data will be lost.", Alert.AlertType.CONFIRMATION, () -> {
                 // Reset selected reservation
                 this.selectedReservationId = 0;
-                Stage currentStage = (Stage) cancelButton.getScene().getWindow();
-                currentStage.close();
+                close();
             });
         // Admin is viewing feedback, close without warning
         } else {
-            Stage currentStage = (Stage) cancelButton.getScene().getWindow();
-            currentStage.close();
+            close();
         }
+    }
+
+    private void close() {
+        // Close the current window
+        Stage currentStage = (Stage) cancelButton.getScene().getWindow();
+        currentStage.close();
+
+        // Explicitly restore the main window (opacity and bring to front)
+        Stage mainStage = (Stage) currentStage.getOwner();
+        if (mainStage != null) {
+            mainStage.setOpacity(1.0);  // Restore the opacity to normal
+            mainStage.toFront();  // Bring the main window to the front
+        }
+    }
+
+    private void showAlert(String title, String message, Alert.AlertType type) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(message);
+        alert.showAndWait();
     }
 
     private void showAlert(String title, String message, Alert.AlertType type, Runnable onConfirmAction) {

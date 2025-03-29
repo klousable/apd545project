@@ -10,8 +10,10 @@ import java.util.logging.Level;
 public class FeedbackDAO {
     private final Connection connection;
     private final Logger LOGGER = DatabaseAccess.LOGGER;
+    private final GuestDAO guestDAO;
 
     public FeedbackDAO() throws SQLException {
+        this.guestDAO = new GuestDAO();
         this.connection = DatabaseAccess.getConnection();
     }
 
@@ -26,6 +28,34 @@ public class FeedbackDAO {
             }
         }
         return "N/A"; // No feedback exists for the reservation
+    }
+
+    public void updateFeedbackGuestByReservationId(int reservationId) {
+        // SQL query to get the guest_id from the reservation
+        String sql = "SELECT guest_id FROM reservations WHERE reservation_id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, reservationId);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                int guestId = rs.getInt("guest_id");
+
+                // Now update the guest_id in the feedback table based on the reservation_id
+                String feedbackSql = "UPDATE feedback SET guest_id = ? WHERE reservation_id = ?";
+                try (PreparedStatement feedbackStmt = connection.prepareStatement(feedbackSql)) {
+                    feedbackStmt.setInt(1, guestId); // Set the guest_id
+                    feedbackStmt.setInt(2, reservationId); // Set the reservation_id
+
+                    int rowsUpdated = feedbackStmt.executeUpdate(); // Execute the update
+
+                    if (rowsUpdated > 0) {
+                    } else {
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Log or handle the exception as per your requirements
+        }
     }
 
     public int getNextFeedbackId() {
@@ -83,5 +113,6 @@ public class FeedbackDAO {
             }
         }
     }
+
 
 }

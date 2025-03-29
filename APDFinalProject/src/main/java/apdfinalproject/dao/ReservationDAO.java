@@ -20,11 +20,13 @@ public class ReservationDAO {
     private final Connection connection;
     private final ReservationRoomsDAO reservationRoomsDAO;
     private final RoomDAO roomDAO;
+    private final FeedbackDAO feedbackDAO;
 
     public ReservationDAO() throws SQLException {
         this.reservationRoomsDAO = new ReservationRoomsDAO();
         this.roomDAO = new RoomDAO();
         this.connection = DatabaseAccess.getConnection();
+        this.feedbackDAO = new FeedbackDAO();
     }
 
     public void createReservation(Reservation reservation) throws SQLException {
@@ -78,44 +80,71 @@ public class ReservationDAO {
         }
     }
 
+    public void updateReservationGuest(Reservation reservation) throws SQLException {
+
+        String reservationSql = "UPDATE reservations SET guest_id = ? WHERE reservation_id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(reservationSql)) {
+            stmt.setInt(1, reservation.getGuestID());
+            stmt.setInt(2, reservation.getReservationID());
+            // Update the reservation record in the database
+            stmt.executeUpdate();
+            LOGGER.info("Reservation ID " + reservation.getReservationID() + " successfully updated.");
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "An error occurred while updating reservation ID " + reservation.getReservationID(), e);
+            throw e; // rethrow the exception after logging it
+        }
+    }
+
     public void updateReservation(Reservation reservation) throws SQLException {
 
+        // Get the current reservation from the database
         Reservation oldReservation = getReservationById(reservation.getReservationID());
+
         List<Integer> oldRoomIds = oldReservation.getRoomIds();
         List<Integer> newRoomIds = reservation.getRoomIds();
 
-        // Update the reservation itself
-        String reservationSql = "UPDATE reservations SET check_in_date = ?, check_out_date = ?, number_of_guests = ?, status = ? WHERE reservation_id = ?";
+        // Update any possible existing feedback?
+        FeedbackDAO feedbackDAO = new FeedbackDAO();
+        feedbackDAO.updateFeedbackGuestByReservationId(reservation.getReservationID());
+
+        // Update the reservation details (check-in, check-out, guests, status)
+        String reservationSql = "UPDATE reservations SET guest_id = ?, check_in_date = ?, check_out_date = ?, number_of_guests = ?, status = ? WHERE reservation_id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(reservationSql)) {
-            stmt.setString(1, reservation.getCheckInDate().toString());
-            stmt.setString(2, reservation.getCheckOutDate().toString());
-            stmt.setInt(3, reservation.getNumberOfGuests());
-            stmt.setString(4, reservation.getStatus());
-            stmt.setInt(5, reservation.getReservationID());
+            stmt.setInt(1, reservation.getGuestID());
+            stmt.setString(2, reservation.getCheckInDate().toString());
+            stmt.setString(3, reservation.getCheckOutDate().toString());
+            stmt.setInt(4, reservation.getNumberOfGuests());
+            stmt.setString(5, reservation.getStatus());
+            stmt.setInt(6, reservation.getReservationID());
 
-            // Update the reservation record
+            // Update the reservation record in the database
             stmt.executeUpdate();
+            LOGGER.info("Reservation ID " + reservation.getReservationID() + " successfully updated.");
 
-            // Remove rooms no longer associated with the reservation
-            for (int oldRoomId: oldRoomIds) {
+            // Remove rooms that are no longer associated with the reservation
+            for (int oldRoomId : oldRoomIds) {
                 if (!newRoomIds.contains(oldRoomId)) {
                     // Remove the room from the reservation_rooms table
                     reservationRoomsDAO.removeRoomFromReservation(reservation.getReservationID(), oldRoomId);
-                    // Update the room's availability to "AVAILABLE"
                 }
             }
 
-            // Add new rooms to the reservation and set them as OCCUPIED
+            // Add new rooms that are now associated with the reservation
             for (int newRoomId : newRoomIds) {
                 if (!oldRoomIds.contains(newRoomId)) {
                     // Add the room to the reservation_rooms table
                     reservationRoomsDAO.addRoomToReservation(reservation.getReservationID(), newRoomId);
                 }
             }
+
+            // Update feedback guest link
+            feedbackDAO.updateFeedbackGuestByReservationId(reservation.getReservationID());
+
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "An error occurred while updating reservation ID " + reservation.getReservationID(), e);
+            throw e; // rethrow the exception after logging it
         }
     }
-
-
 
     // Confirm a reservation for creation
     public void confirmReservation(int reservationID) throws SQLException {
@@ -147,6 +176,20 @@ public class ReservationDAO {
                 roomDAO.updateRoomStatus(roomId, "AVAILABLE");
             }
         }
+    }
+
+    // Get reservation status by ID
+    public String getReservationStatusById(int reservationId) throws SQLException {
+        String status = null;
+        String reservationSql = "SELECT status FROM reservations WHERE reservation_id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(reservationSql)) {
+            stmt.setInt(1, reservationId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                status = rs.getString("status");
+            }
+        }
+        return status;
     }
 
     // Get reservation by ID

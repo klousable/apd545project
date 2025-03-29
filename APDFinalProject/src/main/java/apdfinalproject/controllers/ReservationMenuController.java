@@ -13,6 +13,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -93,6 +94,7 @@ public class ReservationMenuController {
         this.guestDAO = new GuestDAO();
         this.feedbackDAO = new FeedbackDAO();
         this.roomDAO = new RoomDAO();
+        // remove after debugging
         this.admin = new Admin(1, "admin1", "pass1");
     }
 
@@ -110,16 +112,21 @@ public class ReservationMenuController {
                 // Enable the View Feedback button if feedback is "Submitted", otherwise disable it
                 viewFeedbackButton.setDisable(!"Submitted".equals(feedbackStatus));
                 // Enable the Cancel button if status is not CANCELLED and an item is selected
-                cancelReservationButton.setDisable(reservationStatus.equals("CANCELLED") || reservationTableView.getSelectionModel().getSelectedItem() == null);  // Disable button if status is CANCELLED or nothing is selected
-                // Disable the Checkout button if the reservation is already checked out, allow billing for canceled bookings in case of charges
-                checkoutButton.setDisable(reservationStatus.equals("CHECKED_OUT") || reservationTableView.getSelectionModel().getSelectedItem() == null);
+                cancelReservationButton.setDisable(reservationStatus.equals("CANCELLED") ||
+                        reservationStatus.equals("CHECKED_OUT") ||
+                        reservationTableView.getSelectionModel().getSelectedItem() == null);  // Disable button if status is CANCELLED or nothing is selected
+//
 
                 // Change Checkout button text to "View Billing" if the reservation is checked out
+                // Change Modify to View Detail if the reservation is checked out
                 if ("CHECKED_OUT".equals(reservationStatus)) {
                     checkoutButton.setText("View Billing");
+                    editReservationButton.setText("View Detail");
                 } else {
                     checkoutButton.setText("Checkout");
+                    editReservationButton.setText("Modify");
                 }
+
             }
         });
 
@@ -143,7 +150,7 @@ public class ReservationMenuController {
         deleteReservationButton.disableProperty().bind(Bindings.isEmpty(reservationTableView.getSelectionModel().getSelectedItems()));
         editReservationButton.disableProperty().bind(Bindings.isEmpty(reservationTableView.getSelectionModel().getSelectedItems()));
         cancelReservationButton.setDisable(reservationTableView.getSelectionModel().getSelectedItem() == null);  // Disable button if status is CANCELLED or nothing is selected
-        checkoutButton.setDisable(reservationTableView.getSelectionModel().getSelectedItem() == null);
+        checkoutButton.disableProperty().bind(Bindings.isEmpty(reservationTableView.getSelectionModel().getSelectedItems()));
     }
 
     // Method to refresh and populate the table
@@ -253,29 +260,45 @@ public class ReservationMenuController {
     }
 
 
-
-
     @FXML
-    private void handleAddReservationAction(ActionEvent actionEvent) throws IOException {
+    private void handleAddReservationAction(ActionEvent actionEvent) {
         try {
             // Load the Reservation Menu FXML
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/reservation.fxml"));
             Parent reservationRoot = loader.load();
 
-            // Get the ReservationController and pass the Kiosk object
+            // Get the ReservationController and pass the Admin object
             ReservationController reservationController = loader.getController();
             reservationController.setAdmin(this.admin);
+
+            // Get the current stage (main window)
+            Stage mainStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+
+            // Dim the main window
+            mainStage.setOpacity(0.5);
 
             // Create a new stage for the reservation form
             Stage reservationStage = new Stage();
             reservationStage.setTitle("Make a Reservation");
             reservationStage.initModality(Modality.APPLICATION_MODAL);
+            reservationStage.initOwner(mainStage);
             reservationStage.setScene(new Scene(reservationRoot));
 
-            // Set an event listener to refresh the table after the reservation stage is closed
-            reservationStage.setOnHiding(event -> refreshTable());
+            // Restore main window when the reservation form closes
+            reservationStage.setOnCloseRequest(event -> {
+                mainStage.setOpacity(1.0);
+                mainStage.toFront();
+            });
 
-            reservationStage.show();
+            reservationStage.showAndWait();
+
+            // Ensure table refresh after the reservation window is closed
+            refreshTable();
+
+            // Bring back the main window
+            mainStage.setOpacity(1.0);
+            mainStage.toFront();
+
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Error opening the reservation menu: ", e);
         }
@@ -286,7 +309,7 @@ public class ReservationMenuController {
         ReservationTableRow selectedReservation = reservationTableView.getSelectionModel().getSelectedItem();
 
         if (selectedReservation == null) {
-            showAlert("No Selection", "Please select a reservation to check out.", Alert.AlertType.WARNING);
+            showAlert("No Selection", "Please select a reservation to edit.", Alert.AlertType.WARNING);
             return;
         }
 
@@ -295,25 +318,45 @@ public class ReservationMenuController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/reservation.fxml"));
             Parent reservationRoot = loader.load();
 
-            // Get the ReservationController and pass the Kiosk object
+            // Get the ReservationController and pass the Admin object
             ReservationController reservationController = loader.getController();
             reservationController.setAdmin(this.admin);
             reservationController.setSelectedReservationId(selectedReservation.getReservationId());
             reservationController.setReservationTitle("Edit Reservation");
+
+            // Get the current stage (main window)
+            Stage mainStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+
+            // Dim the main window
+            mainStage.setOpacity(0.5);
+
             // Create a new stage for the reservation form
             Stage reservationStage = new Stage();
-            reservationStage.setTitle("Make a Reservation");
+            reservationStage.setTitle("Edit Reservation");
             reservationStage.initModality(Modality.APPLICATION_MODAL);
+            reservationStage.initOwner(mainStage);
             reservationStage.setScene(new Scene(reservationRoot));
 
-            // Set an event listener to refresh the table after the reservation stage is closed
-            reservationStage.setOnHiding(event -> refreshTable());
+            // Restore main window when the reservation form closes
+            reservationStage.setOnCloseRequest(event -> {
+                mainStage.setOpacity(1.0);
+                mainStage.toFront();
+            });
 
-            reservationStage.show();
+            reservationStage.showAndWait();
+
+            // Ensure table refresh after the reservation window is closed
+            refreshTable();
+
+            // Bring back the main window
+            mainStage.setOpacity(1.0);
+            mainStage.toFront();
+
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Error opening the reservation menu: ", e);
         }
     }
+
 
     @FXML
     private void handleCheckOutAction(ActionEvent actionEvent) {

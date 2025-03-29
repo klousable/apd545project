@@ -9,14 +9,18 @@ import apdfinalproject.models.*;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.collections.ListChangeListener;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -25,6 +29,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -37,6 +42,7 @@ public class ReservationController {
     private Kiosk kiosk;
     private Admin admin;
     private SimpleObjectProperty<Guest> guest = new SimpleObjectProperty<>();
+    private StringProperty reservationStatusProperty = new SimpleStringProperty();
 
     private final GuestDAO guestDAO;
     private final ReservationDAO reservationDAO;
@@ -64,7 +70,8 @@ public class ReservationController {
     private Label reservationTaxField;
     @FXML
     private Label reservationTotalField;
-
+    @FXML
+    private Label roomCapacityField;
     @FXML
     private Button clearButton;
     @FXML
@@ -137,10 +144,21 @@ public class ReservationController {
         selectedRoomBedsColumn.setCellValueFactory(cellData -> cellData.getValue().numberOfBedsProperty().asObject());
         selectedRoomPriceField.setCellValueFactory(cellData -> cellData.getValue().priceProperty().asObject());
 
-        // Disable all room selection/CRUD related buttons when nothing is selected
-        addAvailableRoomButton.disableProperty().bind(Bindings.isEmpty(availableRoomsTableView.getSelectionModel().getSelectedItems()));
-        removeSelectedRoomButton.disableProperty().bind(Bindings.isEmpty(selectedRoomsTableView.getSelectionModel().getSelectedItems()));
-        clearSelectedRoomsButton.disableProperty().bind(Bindings.isEmpty(selectedRoomsTableView.getItems()).not());
+        // Disable all room selection/CRUD related buttons when nothing is selected or reservation is checked out
+        addAvailableRoomButton.disableProperty().bind(
+                Bindings.isEmpty(availableRoomsTableView.getSelectionModel().getSelectedItems())
+                        .or(reservationStatusProperty.isEqualTo("CHECKED_OUT"))
+        );
+
+        removeSelectedRoomButton.disableProperty().bind(
+                Bindings.isEmpty(selectedRoomsTableView.getSelectionModel().getSelectedItems())
+                        .or(reservationStatusProperty.isEqualTo("CHECKED_OUT"))
+        );
+
+        clearSelectedRoomsButton.disableProperty().bind(
+                Bindings.isEmpty(selectedRoomsTableView.getItems()).not()
+                        .or(reservationStatusProperty.isEqualTo("CHECKED_OUT"))
+        );
 
         // Add listener to # Rooms field and Subtotal field based on what is in the Selected Room Table
         selectedRoomsTableView.getItems().addListener((ListChangeListener<Room>) change -> {
@@ -148,15 +166,51 @@ public class ReservationController {
             validateReservationFields();
         });
 
-        // Add a listener to adjust button text depending if guest information is entered
+// Add a listener to adjust button text depending on guest information and reservation status
         guest.addListener(new ChangeListener<Guest>() {
             @Override
             public void changed(ObservableValue<? extends Guest> observable, Guest oldValue, Guest newValue) {
+                // Log the change in the guest object
+                LOGGER.info("Guest changed. Old value: " + (oldValue != null ? oldValue.getName() : "null")
+                        + ", New value: " + (newValue != null ? newValue.getName() : "null"));
+
+                // Check if the guest object is null or not
                 if (newValue != null) {
-                    // If a guest object is set, update the label text
-                    addGuestDetailsButton.setText("Edit Guest Details");
+                    // Guest is not null
+                    String reservationStatus = reservationStatusProperty.get();  // Get the status from the reservation's StringProperty
+                    LOGGER.info("Current reservation status: " + reservationStatus);
+
+                    // Update button text based on reservation status
+                    if ("CHECKED_OUT".equals(reservationStatus)) {
+                        addGuestDetailsButton.setText("View Guest Details");
+
+                        // Disable clear and save buttons when reservation is checked out
+                        clearButton.setDisable(true);
+                        saveButton.setDisable(true);
+
+                        // Disable entry fields for view only
+                        numberGuestsField.setDisable(true);
+                        checkInDateField.setDisable(true);
+                        checkOutDateField.setDisable(true);
+
+                    } else if ("CANCELLED".equals(reservationStatus)){
+                        // Clear selected rooms to prevent duplication
+                        selectedRoomsTableView.getItems().clear();
+                    } else {
+                        addGuestDetailsButton.setText("Edit Guest Details");
+
+                        // Enable clear and save buttons when reservation is not checked out
+                        clearButton.setDisable(false);
+                        saveButton.setDisable(false);
+
+                        // Enable entry fields
+                        numberGuestsField.setDisable(false);
+                        checkInDateField.setDisable(false);
+                        checkOutDateField.setDisable(false);
+
+                    }
                 } else {
-                    // If no guest is set, set a default text or clear the label
+                    // If no guest is set, set default text
                     addGuestDetailsButton.setText("Add Guest Details");
                 }
             }
@@ -204,7 +258,6 @@ public class ReservationController {
                 }
             }
         });
-
     }
 
     public Guest getGuest() {
@@ -230,13 +283,16 @@ public class ReservationController {
         this.admin = admin;
     }
 
-    // Retrieve reservation data through DAO if possible
     private void loadReservationData() throws SQLException {
         LOGGER.info("Loading reservation data for reservation ID: " + selectedReservationId);
         Reservation reservation = reservationDAO.getReservationById(selectedReservationId);
 
         if (reservation != null) {
             LOGGER.info("Reservation found for reservation ID: " + selectedReservationId);
+
+            // Set the reservation status property
+            reservationStatusProperty.set(reservation.statusProperty().get());
+
             loadReservation(reservation);
         } else {
             LOGGER.warning("No reservation found for reservation ID: " + selectedReservationId);
@@ -286,12 +342,17 @@ public class ReservationController {
         // Calculate the total number of rooms
         int numRooms = selectedRooms.size();
         numRoomsField.setText(String.valueOf(numRooms));
+        int capacity = 0;
 
         // Calculate the total price of the rooms
         double totalPrice = 0;
         for (Room room : selectedRooms) {
+            capacity += room.getRoomType() == RoomType.DELUXE || room.getRoomType() == RoomType.PENTHOUSE ? 2 : room.getNumberOfBeds() * 2;
             totalPrice += room.getPrice();  // Assuming room has a method getPrice() to get the room price
         }
+
+        // Set the calculated capacity
+        roomCapacityField.setText(String.valueOf(capacity));
 
         // Set the total price to the reservationSubtotalField
         reservationSubtotalField.setText(String.format("%.2f", totalPrice));
@@ -362,11 +423,16 @@ public class ReservationController {
 
         // Assuming selectedRoomsTableView contains a list of selected rooms
         int totalBeds = 0;
+        int capacity = 0;
         for (Room room : selectedRoomsTableView.getItems()) {
             totalBeds += room.getNumberOfBeds();
+            if (room.getRoomType() == RoomType.PENTHOUSE || room.getRoomType() == RoomType.DELUXE) {
+                capacity += 2;
+            } else {
+                capacity += room.getNumberOfBeds() * 2;
+            }
         }
 
-        int capacity = totalBeds * 2;
 
         if (numGuests > capacity) {
             isValid = false;
@@ -402,8 +468,6 @@ public class ReservationController {
             validationErrorLabel.setText("");
             validationErrorLabel.setVisible(false);
             addGuestDetailsButton.setDisable(false);  // Enable the add guest details button
-            // Check if a guest object has been created in the guest details screen
-            saveButton.setDisable(this.guest == null);
         } else {
             validationErrorLabel.setVisible(true);
             validationErrorLabel.setText(errorMessage.toString());
@@ -457,23 +521,54 @@ public class ReservationController {
             GuestController guestController = loader.getController();
             guestController.setGuest(getGuest());
 
+            if (guestController.getGuest() != null) {
+                guestController.setGuestTitle("View/Edit Guest");
+                if ("CHECKED_OUT".equals(reservationStatusProperty.get())) {
+                    guestController.setViewOnly();
+                }
+            }
+
             // Set admin or kiosk depending
             if (this.kiosk != null) {
-            guestController.setKiosk(this.kiosk);
+                guestController.setKiosk(this.kiosk);
             } else if (this.admin != null) {
-            guestController.setAdmin(this.admin);
+                guestController.setAdmin(this.admin);
             }
+
+            // Get the current stage (main window)
+            Stage mainStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+
+            // Disable interaction with the main window and dim it
+            mainStage.setOpacity(0.5); // Optionally dim the main window
 
             // Show the guest form in a new stage
             Stage guestStage = new Stage();
             guestStage.setScene(new Scene(root));
-            guestStage.setTitle("Add Guest");
-            guestStage.showAndWait();  // Wait until the guest form is closed
+            guestStage.setTitle("Guest Menu");
+
+            // Make the guest window modal (block interaction with main window)
+            guestStage.initOwner(mainStage); // Set main stage as owner
+            guestStage.initModality(Modality.APPLICATION_MODAL); // Block interaction with the main window
+
+            // When the guest form is closed, restore the main window
+            guestStage.setOnCloseRequest(event -> {
+                // Restore the main window opacity when the guest form is closed
+                mainStage.setOpacity(1.0); // Restore main window opacity
+                mainStage.toFront(); // Bring the main window to the front
+            });
+
+            guestStage.showAndWait(); // Wait until the guest form is closed
 
             // After the form is closed, get the guest object
             this.guest.set(guestController.getGuest());
+            System.out.println(this.guest.get().getGuestId());
+            System.out.println(this.guest.get().getName());
+
+            // Bring the main window to the front in case it wasn't restored properly
+            mainStage.toFront();
 
         } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "An error occurred while loading the Guest menu: " + e);
             e.printStackTrace();
         }
     }
@@ -502,21 +597,72 @@ public class ReservationController {
 
                 // Check if this reservation exists in the database
                 Reservation existingReservation = null;
+                Guest existingGuest = null;
 
                 try {
                     existingReservation = reservationDAO.getReservationById(reservationId);
+
                     if (existingReservation != null) {
-                        guestDAO.updateGuest(this.getGuest());
+                        // Check if the guest exists first if not then we need to create a Guest
+                        existingGuest  = guestDAO.getGuestById(this.getGuest().getGuestId());
+                        if (existingGuest != null) {
+                            // Kiosk can only read existing guest information not edit
+                            if (kiosk!= null) {
+                                LOGGER.info("Kiosk ID: " + kiosk.getKioskID() + "located at " + kiosk.getLocation() + " used existing guest ID " + this.getGuest().getGuestId());
+                            }
+                        } else {
+                            guestDAO.createGuest(this.getGuest());
+                            if (admin != null) {
+                                LOGGER.info("Admin " + admin.getUsername() + " successfully created Guest ID: " + this.getGuest().getGuestId());
+                            }
+                            if (kiosk!= null) {
+                                LOGGER.info("Kiosk ID: " + kiosk.getKioskID() + "located at " + kiosk.getLocation() + " successfully created Guest ID: " + this.getGuest().getGuestId());
+                            }
+                        }
+
+                        // Point the new reservation info to the database
+                        existingReservation = reservation;
                         // Update the reservation object in the database
-                        // Update the Guest object in the database
+                        reservationDAO.updateReservation(existingReservation);
+
+                        // Log success, must be admin as kiosks cannot edit existing reservations
+                        LOGGER.info("Admin " + admin.getUsername() + " successfully updated Reservation ID " + existingReservation.getReservationID() + " for Guest ID: " + this.getGuest().getGuestId());
                     } else {
+                        // Check if the guest exists, update or create the guest accordingly
+                        existingGuest = guestDAO.getGuestById(this.getGuest().getGuestId());
+
+                        if (existingGuest != null) {
+                            // Kiosk can only read existing guest information not edit
+                            if (kiosk!= null) {
+                                LOGGER.info("Kiosk ID: " + kiosk.getKioskID() + "located at " + kiosk.getLocation() + " used existing guest ID " + this.getGuest().getGuestId());
+                            }
+                        } else {
+                            LOGGER.info("Guest does not exist");
+                            guestDAO.createGuest(this.getGuest());
+                            if (admin != null) {
+                                LOGGER.info("Admin " + admin.getUsername() + " successfully created Guest ID: " + this.getGuest().getGuestId());
+                            }
+                            if (kiosk!= null) {
+                                LOGGER.info("Kiosk ID: " + kiosk.getKioskID() + "located at " + kiosk.getLocation() + " successfully created Guest ID: " + this.getGuest().getGuestId());
+                            }
+                        }
+
+                        // Create a new reservation if it doesn't exist now that guest info existss
                         reservationDAO.createReservation(reservation);
-                        guestDAO.createGuest(this.getGuest());
+
+                        // Log success depending on if it is an admin or kiosk
+                        if (admin != null) {
+                            LOGGER.info("Admin " + admin.getUsername() + " successfully created Reservation ID " + reservation.getReservationID() + " for Guest ID: " + this.getGuest().getGuestId());
+                        }
+                        if (kiosk!= null) {
+                            LOGGER.info("Kiosk ID: " + kiosk.getKioskID() + "located at " + kiosk.getLocation() + " successfully created Reservation" + reservation.getReservationID() + " for Guest ID: " + this.getGuest().getGuestId());
+                        }
                     }
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                    // Use logger to capture error
+                } catch (Exception e) {
+                    LOGGER.log(Level.SEVERE, "An error occurred while processing the reservation: " + e);
                 }
+                showAlert("Reservation Saved Successfully", "Reservation with ID " + reservation.getReservationID() + " was saved successfully.", Alert.AlertType.INFORMATION);
+                close();
             }
         });
 
@@ -524,10 +670,7 @@ public class ReservationController {
 
     @FXML
     private void handleCancelAction(ActionEvent actionEvent) {
-        showAlert("Exit Confirmation", "Are you sure you want to exit? Any unsaved data will be lost.", Alert.AlertType.CONFIRMATION, () -> {
-            Stage currentStage = (Stage) cancelButton.getScene().getWindow();
-            currentStage.close();
-        });
+        showAlert("Exit Confirmation", "Are you sure you want to exit? Any unsaved data will be lost.", Alert.AlertType.CONFIRMATION, this::close);
     }
 
     @FXML
@@ -606,6 +749,19 @@ public class ReservationController {
         validationErrorLabel.setText("");
         selectedRoomErrorLabel.setText("");
 
+    }
+
+    private void close() {
+        // Close the current window
+        Stage currentStage = (Stage) cancelButton.getScene().getWindow();
+        currentStage.close();
+
+        // Explicitly restore the main window (opacity and bring to front)
+        Stage mainStage = (Stage) currentStage.getOwner();
+        if (mainStage != null) {
+            mainStage.setOpacity(1.0);  // Restore the opacity to normal
+            mainStage.toFront();  // Bring the main window to the front
+        }
     }
 
     private void showAlert(String title, String message, Alert.AlertType type, Runnable onConfirmAction) {

@@ -10,6 +10,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static apdfinalproject.database.DatabaseAccess.LOGGER;
+
 public class ReservationRoomsDAO {
 
     private final Connection connection;
@@ -20,7 +22,6 @@ public class ReservationRoomsDAO {
         this.roomDAO = new RoomDAO();
     }
 
-    // Add a room to a reservation
     public void addRoomToReservation(int reservationId, int roomId) throws SQLException {
         // First, add the room to the reservation_rooms table
         String sql = "INSERT INTO reservation_rooms (reservation_id, room_id) VALUES (?, ?)";
@@ -29,13 +30,12 @@ public class ReservationRoomsDAO {
             stmt.setInt(2, roomId);
             stmt.executeUpdate();
         }
-
         // Now, update the room status to 'OCCUPIED'
         roomDAO.updateRoomStatus(roomId, "OCCUPIED");
     }
 
-    // Remove a room from a reservation
     public void removeRoomFromReservation(int reservationId, int roomId) throws SQLException {
+
         // First, remove the room from the reservation_rooms table
         String sql = "DELETE FROM reservation_rooms WHERE reservation_id = ? AND room_id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -43,6 +43,7 @@ public class ReservationRoomsDAO {
             stmt.setInt(2, roomId);
             stmt.executeUpdate();
         }
+        // Now, update the room status to 'AVAILABLE'
         roomDAO.updateRoomStatus(roomId, "AVAILABLE");
     }
 
